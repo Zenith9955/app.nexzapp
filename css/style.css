@@ -1,0 +1,234 @@
+/* Reset default styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Header styles */
+  header {
+    background-color: #ffffff;
+    color: #333; /* Dark gray */
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .logo img {
+    height: 90px; /* Adjusted logo size */
+  }
+  
+  /* Navigation styles */
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav ul li {
+    display: inline-block;
+  }
+  
+  nav ul li a {
+    color: #333; /* Dark gray */
+    text-decoration: none;
+    padding: 15px 20px; /* Reduced padding */
+    display: block;
+    transition: background-color 0.3s; /* Smooth hover effect */
+  }
+  
+  nav ul li a:hover {
+    background-color: #e0e0e0; /* Lighter gray on hover */
+  }
+  
+  /* Dropdown styles */
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9; /* Light gray */
+    min-width: 200px;
+    z-index: 1;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  .dropdown-content a {
+    color: #333; /* Dark gray */
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-content a:hover {
+    background-color: #e0e0e0; /* Lighter gray on hover */
+  }
+  
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown button {
+    background-color: #ababab; /* Green background */
+    color: white; /* White text color */
+    border: none; /* No border */
+    padding: 05px 10px; /* Padding */
+    text-align: center; /* Center text */
+    text-decoration: none; /* No underline */
+    display: inline-block;
+    font-size: 14px; /* Font size */
+    cursor: pointer; /* Cursor on hover */
+    border-radius: 4px; /* Rounded corners */
+  }
+  
+  .dropdown button:hover {
+    background-color: #333; /* Darker green background on hover */
+  }
+  
+  /* CSS for the Welcome message and authenticated user greeting */
+  h3 {
+    margin-top: 20px; /* Adjust the top margin as needed */
+  }
+  
+  /* CSS for the authenticated user greeting */
+  h3 {
+    font-size: 24px; /* Adjust font size as needed */
+    color: #333; /* Dark gray */
+  }
+  
+  h4 {
+    font-size: 18px; /* Adjust font size as needed */
+    color: #666; /* Gray */
+    margin-top: 10px; /* Adjust margin as needed */
+  }
+  /* CSS for the Sign Out link */
+  a.signout-link {
+    color: #333; /* Dark gray text color */
+    text-decoration: none; /* Remove underline */
+    padding: 10px 20px; /* Add padding */
+    border: 1px solid #333; /* Add border */
+    border-radius: 4px; /* Add rounded corners */
+    background-color: #fff; /* White background */
+  }
+  
+  a.signout-link:hover {
+    background-color: #e0e0e0; /* Light gray background on hover */
+    color: #000; /* Darken text color on hover */
+  }
+  
+  /*===============================MAIN CSS END=========================================*/
+  
+  /*===============================FORMS`` CSS END=========================================*/
+  
+
+  form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="file"],
+select,
+button {
+    width: calc(100% - 22px); /* Adjust for date input's arrow button */
+    padding: 12px; /* Increased padding */
+    margin-bottom: 20px; /* Increased spacing */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="date"] {
+    width: calc(100% - 22px); /* Adjust for date input's arrow button */
+    padding: 12px; /* Increased padding */
+    margin-bottom: 20px; /* Increased spacing */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 10 5" xmlns="http://www.w3.org/2000/svg" fill="%23333"><path d="M5 0l5 5H0z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    background-size: 10px auto;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* KYC/Billing Form Toggle */
+#kyc-form,
+#billing-form {
+    display: none;
+}
+
+/* Show KYC or Billing form based on selection */
+#FileType[value="kyc"] ~ #kyc-form,
+#FileType[value="billing"] ~ #billing-form {
+    display: block;
+}
+  /*===============================FORM CSS END=========================================*/
+  
+  /*===============================CONTACT FORM  CSS=========================================*/
+
+  #additionalForm {
+    display: none;
+    margin-top: 10px; /* Adjust spacing as needed */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  
+  #additionalForm label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  #additionalForm input[type="text"],
+  #additionalForm input[type="email"] {
+    width: 60%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    box-sizing: border-box;
+  }
+  
+
+
+
+
+
+    
+  /*===============================CONTACT FORM  CSS END=========================================*/

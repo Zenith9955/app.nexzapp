@@ -8,6 +8,9 @@
         body {
         font-family: Arial, sans-serif;
         background-color: #f3f3f3;
+        background-image: url('css/bg.jpg'); /* Path to your image */
+        background-size: cover; /* Cover the entire page */
+        background-position: center; 
         margin: 0;
         padding: 0;
         display: flex;
@@ -29,7 +32,7 @@
         box-sizing: border-box;
         background-color: #fff;
         border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
         display: flex;
     }
     
@@ -148,7 +151,7 @@
             array_push($errors, "Passwords do not match");
         }
 
-        require_once "database.php";
+        require_once "admindatabase.php";
         $sql = "SELECT * FROM users WHERE login = '$loginid'";
         $result = mysqli_query($conn, $sql);
         $rowCount = mysqli_num_rows($result);
@@ -172,8 +175,7 @@
         }else
         die("Something went wrong");    
     }
-
-        }
+}
     ?>
         <div class="logo">
             <img src="css/logo.jpg" alt="Logo">

@@ -13,6 +13,7 @@ if (!isset($_SESSION['user'])) {
   <link rel="stylesheet" href="css/style.css">
 </head>
 
+
 <!------=======================HEADER START==========================================-->
 
 <body>
@@ -55,7 +56,9 @@ if (!isset($_SESSION['user'])) {
             <a href="#">Port Fiber</a>
           </div>
         </li>
+        <li class="dropdown">
         <a href="logout.php">Sign Out</a>
+        </li>
       </ul>
     </nav>
   </header>
@@ -63,59 +66,5 @@ if (!isset($_SESSION['user'])) {
 
 
 <!--------------===============FORM Master===========================================-->
-
-<form action="/venform/" method="post">
-  <h1>Master Form</h1>
-  <label for="Name">Name:</label>
-  <input type="text" id="Name" name="Name" required>
-  <br>
-  <label for="gst">GST:</label>
-  <input type="file" id="gst" name="gst" accept=".pdf, .doc, .docx" required>
-  <br>
-  <label for="coi">COI:</label>
-  <input type="file" id="coi" name="coi" accept=".pdf, .doc, .docx" required>
-  <br>
-  <label for="pan">Pan:</label>
-  <input type="file" id="coi" name="coi" accept=".pdf, .doc, .docx" required>
-  <br>
-  <label for="agreement">Agreement:</label>
-  <input type="file" id="coi" name="coi" accept=".pdf, .doc, .docx" required>
-  <br>
-  <br>
-  <label for="ExpireDate">Agreement Start Date:</label>
-  <input type="date" id="ExpireDate" name="ExpireDate" required>
-  <br>  <br>
-  <label for="ExpireDate">Agreement Expire Date:</label>
-  <input type="date" id="ExpireDate" name="ExpireDate" required>
-  <br>
-  <br>
-  <label for="Others">Others:</label>
-  <input type="file" id="Others" name="Others" accept=".pdf, .doc, .docx" required>
-  <br>
-  
-  <a href="#" onclick="toggleForm()">Contact Form &#9662;</a>
-
-  <div id="additionalForm" style="display: none;">
-    <h4>Owner</h4>
-    <label for="designation">Designation:</label>
-    <input type="text" id="designation" name="designation" required>
-    <br>
-    <label for="contact">Contact No.:</label>
-    <input type="text" id="contact" name="contact" required>
-    <br>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-    <br>
-  </div>
-  
-  <button type="submit">Submit</button>
-</form>
-
-<script>
-  function toggleForm() {
-    var additionalForm = document.getElementById('additionalForm');
-    additionalForm.style.display = (additionalForm.style.display === 'none') ? 'block' : 'none';
-  }
-</script>
 </body>
 </html>

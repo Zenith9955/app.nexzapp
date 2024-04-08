@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (isset($_SESSION['user'])) {
+if (!isset($_SESSION['user'])) {
     header('Location: login.php');
 }
 ?>
@@ -23,7 +23,7 @@ if (isset($_SESSION['user'])) {
     </div>
     <nav>
       <ul>
-        <li class="dropdown">
+        <li class="dropdown"> 
           <a href="index.php">Master &#9662;</a>
           <div class="dropdown-content">
             <a href="vendor.php">Vendor</a>
@@ -64,53 +64,55 @@ if (isset($_SESSION['user'])) {
   <!---========================CUSTOMER FORMS============================================-->
   
   
-  <form id="custform" method="post" >
+  <form action = "" method="post" >
+  <?php
+    if (isset($_POST['submit'])) {
+        $name = $_POST['name'];
+        $address = $_POST['address'];
+        $agreement = $_POST['agreement'];
+        $start = $_POST['start'];
+        $expire = $_POST['expire'];
+        $others = $_POST['others'];
+        
+        // Assuming $conn is your database connection
+        require_once "masterdatabase.php";
+        $sql = "INSERT INTO customer (name, address, agreement, start, expire, others) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = mysqli_stmt_init($conn);
+        $prepareStmt = mysqli_stmt_prepare($stmt, $sql);
+        
+        if ($prepareStmt) {
+            mysqli_stmt_bind_param($stmt, "ssssss", $name, $address, $agreement, $start, $expire, $others);
+            mysqli_stmt_execute($stmt);
+            echo "<div class='alert alert-success'>Upload successfully</div>";   
+        } else {
+            echo "<div class='alert alert-danger'>Something went wrong: " . mysqli_error($conn) . "</div>";
+        }
+    }
+?>
+
     <h1>Customer Form</h1>
-    <label for="CustomerName">Customer Name:</label>
-    <input type="text" id="CustomerName" name="CustomerName" required>
+    <label for="name">Customer Name:</label>
+    <input type="text" id="name" name="name" required>
     <br>
-    <label for="Address">Address:</label>
-    <input type="text" id="Address" name="Address" required>
+    <label for="address">Address:</label>
+    <input type="text" id="address" name="address" required>
     <br>
-    <label for="Agreement">Agreement:</label>
-    <input type="file" id="Agreement" name="Agreement" accept=".pdf, .doc, .docx" required>
-    <br>
-    <label for="AgreementDate">Agreement Date:</label>
-    <input type="date" id="AgreementDate" name="AgreementDate" required>
-    <br>
-    <label for="ExpireDate">Agreement Expire Date:</label>
-    <input type="date" id="ExpireDate" name="ExpireDate" required>
-    <br>
-    <label for="FileType">KYC/BILLING</label>
-    <select id="FileType" name="FileType" onchange="toggleForm()">
-        <option value="none" selected disabled hidden>Choose File Type</option>
-        <option value="kyc">KYC</option>
-        <option value="billing">Billing</option>
-    </select>
-    <br>
-    <div id="kyc-form" style="display: none;">
-      <label for="totalGst">Total GST:</label>
-      <select id="totalGst" name="totalGst" onchange="showGstInputs()">
-          <option value="0">Select Total GST Users</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <!-- Add more options as needed -->
-      </select>
-      <div id="gstInputsContainer"></div>
-      
 
-      <label for="coi">COI</label>
-      <input type="file" id="coi" name="coi" accept=".pdf, .doc, .docx" required>
+  <br>
+  <label for="agreement">Agreement:</label>
+  <input type="file" id="agreement" name="agreement" accept=".pdf, .doc, .docx" required>
+  <br>
+  <br>
+  <label for="start">Agreement Start Date:</label>
+  <input type="date" id="start" name="start" required>
+  <br>  <br>
+  <label for="expire">Agreement Expire Date:</label>
+  <input type="date" id="expire" name="expire" required>
+  <br>
 
-      <label for="pan">PAN:</label>
-      <input type="file" id="pan" name="pan" accept=".pdf, .doc, .docx" required>
-    </div>
-    <div id="billing-form" style="display: none;">
-        <!-- Billing Form Fields -->
-        <!-- You can add your Billing form fields here -->
-    </div>
-    <button type="submit">Submit</button>
+    <label for="others">Others:</label>
+      <input type="file" id="others" name="others" accept=".pdf, .doc, .docx" required>
+    <button type="submit" name = "submit"s>Submit</button>
 </form>
 
 
@@ -124,18 +126,25 @@ if (isset($_SESSION['user'])) {
       var fileType = document.getElementById("FileType").value;
       var kycForm = document.getElementById("kyc-form");
       var billingForm = document.getElementById("billing-form");
+      var contactform = document.getElementById("contact-Form");
 
       if (fileType === "kyc") {
           kycForm.style.display = "block";
           billingForm.style.display = "none";
+          contactform.style.display = "none";
       } else if (fileType === "billing") {
           kycForm.style.display = "none";
           billingForm.style.display = "block";
+          contactform.style.display = "none";
+      } else if (fileType === "contact") {
+          kycForm.style.display = "none";
+          billingForm.style.display = "none";
+          contactform.style.display = "block";
       } else {
           kycForm.style.display = "none";
           billingForm.style.display = "none";
       }
-  }
+    }
 
   function showGstInputs() {
       var totalGst = document.getElementById("totalGst").value;

@@ -15,6 +15,9 @@ if (isset($_SESSION['user'])) {
     body {
     font-family: Arial, sans-serif;
     background-color: #f3f3f3;
+    background-image: url('css/bg.jpg'); /* Path to your image */
+    background-size: cover; /* Cover the entire page */
+    background-position: center; 
     margin: 0;
     padding: 0;
     display: flex;
@@ -36,7 +39,7 @@ if (isset($_SESSION['user'])) {
     box-sizing: border-box;
     background-color: #fff;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
     display: flex;
 }
 
@@ -125,7 +128,7 @@ button[type="submit"]:hover {
 if (isset($_POST["login"])){
     $loginid = $_POST['loginid'];
     $password = $_POST['password'];
-    require_once "database.php";
+    require_once "admindatabase.php";
     $sql = "SELECT * FROM  users WHERE login = '$loginid'";
     $result = mysqli_query($conn, $sql);
     $user = mysqli_fetch_array($result, MYSQLI_ASSOC);

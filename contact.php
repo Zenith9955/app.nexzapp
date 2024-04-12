@@ -2,7 +2,6 @@
 session_start();
 if (!isset($_SESSION['user'])) {
     header('Location: login.php');
-    exit(); // Add exit to stop further execution
 }
 ?>
 
@@ -14,8 +13,11 @@ if (!isset($_SESSION['user'])) {
   <title>Onremote inhouse software</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
+
+<!------=======================HEADER START==========================================-->
+
 <body>
-  <header>
+<header>
     <div class="logo">
       <img src="css/logo.jpg" alt="Logo">
     </div>
@@ -64,8 +66,42 @@ if (!isset($_SESSION['user'])) {
       </ul>
     </nav>
   </header>
+ 
 
+  <!---========================CUSTOMER FORMS============================================-->
   
+  
+  <form action = "" method="post" >
+ 
+  <h1>Contact Form</h1>
+  
+    <h4>Owner</h4>
+    <input type="text"  name="designation" placeholder ="Designation" required>
+    <input type="text"  name="Name" placeholder ="Name"required>
+    <input type="text"  name="contact" placeholder ="Contact Number"required>
+    <input type="text"  name="email" placeholder ="Email" required>
+
+    <h4>Account</h4>
+    <input type="text"  name="designation" placeholder ="Designation" required>
+    <input type="text"  name="Name" placeholder ="Name"required>
+    <input type="text"  name="contact" placeholder ="Contact Number"required>
+    <input type="text"  name="email" placeholder ="Email" required>
+
+    <h4>Feild Team</h4>
+    <input type="text"  name="designation" placeholder ="Designation" required>
+    <input type="text"  name="Name" placeholder ="Name"required>
+    <input type="text"  name="contact" placeholder ="Contact Number"required>
+    <input type="text"  name="email" placeholder ="Email" required>
+
+    <h4>?</h4>
+    <input type="text"  name="designation" placeholder ="Designation" required>
+    <input type="text"  name="Name" placeholder ="Name"required>
+    <input type="text"  name="contact" placeholder ="Contact Number"required>
+    <input type="text"  name="email" placeholder ="Email" required>
+
+    <button type="submit" name="submit">Submit</button>
+</form>
+
 
 </body>
 </html>

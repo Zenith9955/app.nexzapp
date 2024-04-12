@@ -13,11 +13,24 @@ if (!isset($_SESSION['user'])) {
   <title>Onremote inhouse software</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
+<style>
+   a {
+    color: #333; /* Dark gray text color */
+    text-decoration: none; /* Remove underline */
+    padding: 5px 10px; /* Add padding */
+    background-color: #fff; /* White background */
+  }
+  
+  a:hover {
+    background-color: #e0e0e0; /* Light gray background on hover */
+    color: #000; /* Darken text color on hover */
+  }
+  </style>
 
 <!------=======================HEADER START==========================================-->
 
 <body>
-  <header>
+<header>
     <div class="logo">
       <img src="css/logo.jpg" alt="Logo">
     </div>
@@ -27,7 +40,7 @@ if (!isset($_SESSION['user'])) {
           <a href="index.php">Master &#9662;</a>
           <div class="dropdown-content">
             <a href="vendor.php">Vendor</a>
-            <a href="cust.php" >Customer</a>
+            <a href="cust.php">Customer</a>
             <a href="#">State</a>
           </div>
         </li>
@@ -52,14 +65,21 @@ if (!isset($_SESSION['user'])) {
           <a href="#">Customer Database &#9662;</a>
           <div class="dropdown-content">
             <a href="#">Manage Services</a>
-            <a href="vtl.html">Fiber Services</a>
+            <a href="#">Fiber Services</a>
             <a href="#">Port Fiber</a>
           </div>
         </li>
-        <a href="logout.php">Sign Out</a>
+        <li class="dropdown">
+          <a href="#">Profile &#9662;</a>
+          <div class="dropdown-content">
+          <a href="logout.php">Sign Out</a>
+          <a href="search.php">Search</a>
+        </div>
+        </li>
       </ul>
     </nav>
   </header>
+
 
   <!---========================CUSTOMER FORMS============================================-->
   

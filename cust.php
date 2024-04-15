@@ -98,8 +98,8 @@ if (isset($_POST['submit'])) {
     // File uploads
     $agreement = $_FILES['agreement'];
     $others = $_FILES['others'];
-
-    // Assuming you have functions to handle file validation and upload:
+    
+    // Assuming you have functions to handle file validation and upload: 
     // uploadFile() should handle the actual upload process including validation
     // and return the path to the stored file or false on failure.
     $agreementPath = uploadFile($agreement);
@@ -121,7 +121,7 @@ if (isset($_POST['submit'])) {
     }
 }
 
-function uploadFile($file) {
+  function uploadFile($file) {
     $uploadDirectory = "uploads/"; // Ensure this directory exists and is writable
     $fileName = basename($file['name']);
     $targetFilePath = $uploadDirectory . $fileName;
@@ -151,7 +151,6 @@ function uploadFile($file) {
         <option value="acc.php">Account</option>
         <option value="contact.php">Contact</option>
     </select>
-
     <br>
     <label for="agreement">Agreement:</label>
     <input type="file" id="agreement" name="agreement" accept=".pdf, .doc, .docx" required>

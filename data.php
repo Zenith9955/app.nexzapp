@@ -94,7 +94,7 @@ input[type="text"],
 button {
     padding: 6px;
     font-size: 16px;
-}
+ }
 
 button {
     cursor: pointer;
@@ -106,12 +106,62 @@ a {
 }
 
 a:hover {
-    text-decoration: underline;
+    text-decoration:;
 }
 </style>
 
-<!-----------------------=+===========cSS End=======================---------->
+<!-----------------------=+===========CSS END=======================---------->
 <body>
+<header>
+    <div class="logo">
+      <img src="css/logo.jpg" alt="Logo">
+    </div>
+    <nav>
+      <ul>
+        <li class="dropdown">
+          <a href="index.php">Master &#9662;</a>
+          <div class="dropdown-content">
+            <a href="vendor.php">Vendor</a>
+            <a href="cust.php">Customer</a>
+            <a href="#">State</a>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="#">Service &#9662;</a>
+          <div class="dropdown-content">
+            <a href="#">Fiber</a>
+            <a href="#">Bandwidth</a>
+            <a href="#">Managed Fiber</a>
+            <a href="#">Infra Solution</a>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="#">Feasibility &#9662;</a>
+          <div class="dropdown-content">
+            <a href="#">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="#">Customer Database &#9662;</a>
+          <div class="dropdown-content">
+            <a href="#">Manage Services</a>
+            <a href="#">Fiber Services</a>
+            <a href="#">Port Fiber</a>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="#">Profile &#9662;</a>
+          <div class="dropdown-content">
+          <a href="logout.php">Sign Out</a>
+          <a href="search.php">Search</a>
+        </div>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
 
 <form action="" method="get">
     <input type="text" name="search" placeholder="Search by name..." value="<?= htmlspecialchars($search) ?>">
@@ -133,8 +183,8 @@ a:hover {
             <td><?= htmlspecialchars($row['address']) ?></td>
             
             <td>
-                <a href="?uploads<?= urlencode($row['agreement']) ?>" download="<?= htmlspecialchars($row['agreement']) ?>">Download Agreement</a><br>
-                <a href="?uploads<?= urlencode($row['others']) ?>" download="<?= htmlspecialchars($row['others']) ?>">Download Others</a>
+                <a href="?uploads/<?= urlencode($row['agreement']) ?>" download="<?= htmlspecialchars($row['agreement']) ?>">Download Agreement</a><br>
+                <a href="?uploads/<?= urlencode($row['others']) ?>" download="<?= htmlspecialchars($row['others']) ?>">Download Others</a>
             </td>
             <td><?= htmlspecialchars($row['start']) ?></td>
             <td><?= htmlspecialchars($row['expire']) ?></td>
@@ -144,10 +194,8 @@ a:hover {
         </tr>
     <?php endwhile; ?>
 </table>
-
 </body>
 </html>
-
 <?php
 $conn->close();
-?>
+ ?>

@@ -20,33 +20,39 @@ if ($conn->connect_error) {
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     // Assuming you have a function to safely fetch and verify the file names before deleting
-    $stmt = $conn->prepare("SELECT agreement, others FROM customer WHERE id = ?");
+    $stmt = $conn->prepare("SELECT agreement, others, cancel_cheque, coi, pan, license, other FROM vendor WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
     if ($row = $result->fetch_assoc()) {
         @unlink('uploads/' . basename($row['agreement']));
         @unlink('uploads/' . basename($row['others']));
+        @unlink('uploads/' . basename($row['cancel_cheque']));
+        @unlink('uploads/' . basename($row['coi']));
+        @unlink('uploads/' . basename($row['pan']));
+        @unlink('uploads/' . basename($row['license']));
+        @unlink('uploads/' . basename($row['other']));
+
     }
     $stmt->close();
 
     // Delete the record
-    $stmt = $conn->prepare("DELETE FROM customers WHERE id = ?");
+    $stmt = $conn->prepare("DELETE FROM vendor WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $stmt->close();
-    header("Location: data.php"); // Prevent form resubmission pattern
+    header("Location: vendordata.php"); // Prevent form resubmission pattern
     exit;
 }
 
 // Search functionality
 $search = $_GET['search'] ?? '';
 if ($search) {
-    $stmt = $conn->prepare("SELECT * FROM customers WHERE name LIKE ?");
+    $stmt = $conn->prepare("SELECT * FROM vendor WHERE name LIKE ?");
     $searchTerm = "%{$search}%";
     $stmt->bind_param("s", $searchTerm);
 } else {
-    $stmt = $conn->prepare("SELECT * FROM customers");
+    $stmt = $conn->prepare("SELECT * FROM vendor");
 }
 
 $stmt->execute();
@@ -57,7 +63,7 @@ $result = $stmt->get_result();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Customers Database</title>
+    <title>Vendor Database</title>
     <link rel="stylesheet" href="css/style.css"> <!-- Make sure to link to the correct CSS file -->
 </head>
 <style>
@@ -133,6 +139,7 @@ a:hover {
 <!-----------------------=+===========CSS END=======================---------->
 <body>
 <header>
+    
     <div class="logo">
       <img src="css/logo.jpg" alt="Logo">
     </div>
@@ -186,6 +193,8 @@ a:hover {
 <form action="" method="get">
     <input type="text" name="search" placeholder="Search by name..." value="<?= htmlspecialchars($search) ?>">
     <button type="submit">Search</button>
+   
+
 </form>
 
 <table border="1">

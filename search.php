@@ -54,11 +54,63 @@ $connection->close();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Database Table View</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onremote inhouse software</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="css/logo.jpg" alt="Logo">
+    </div>
+    <nav>
+      <ul>
+        <li class="dropdown">
+          <a href="index.php">Master &#9662;</a>
+          <div class="dropdown-content">
+            <a href="vendor.php">Vendor</a>
+            <a href="cust.php">Customer</a>
+            <a href="#">State</a>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="#">Service &#9662;</a>
+          <div class="dropdown-content">
+            <a href="#">Fiber</a>
+            <a href="#">Bandwidth</a>
+            <a href="#">Managed Fiber</a>
+            <a href="#">Infra Solution</a>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="#">Feasibility &#9662;</a>
+          <div class="dropdown-content">
+            <a href="#">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="#">Customer Database &#9662;</a>
+          <div class="dropdown-content">
+            <a href="#">Manage Services</a>
+            <a href="#">Fiber Services</a>
+            <a href="#">Port Fiber</a>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="#">Profile &#9662;</a>
+          <div class="dropdown-content">
+          <a href="logout.php">Sign Out</a>
+          <a href="search.php">Search</a>
+        </div>
+        </li>
+      </ul>
+    </nav>
+  </header>
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 20px;
             background-color: #fff;
             color: #333;
@@ -81,10 +133,10 @@ $connection->close();
             background-color: #f2f2f2;
         }
         form {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         label, select, input, button {
-            font-size: 15px;
+            font-size: 20px;
         }
         button {
             padding: 5px;
@@ -107,12 +159,11 @@ $connection->close();
         <?php endforeach; ?>
     </select>
     <button type="submit" name="action" value="dropdown-search">Search</button>
+    
 </form>
 
 <form method="GET">
     <input type="hidden" name="table" value="<?php echo isset($_GET['table']) ? htmlspecialchars($_GET['table']) : ''; ?>">
-    <input type="text" name="search" placeholder="Search..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-    <button type="submit" name="action" value="dropdown-search">Search By Name</button>
 </form>
 
     <?php if ($searchResults && $searchResults->num_rows > 0): ?>

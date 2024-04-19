@@ -190,6 +190,7 @@ if (!isset($_SESSION['user'])) {
   
 
   a:hover {
+    background-color: #e0e0e0;
     color: #000;
   }
   </style>
@@ -258,80 +259,103 @@ if (!isset($_SESSION['user'])) {
   <div class="box"> <!-- Enclosing the content in a box -->
     <form action="" method="post" enctype="multipart/form-data">
 
+    <!---------------------===========DATABASE PHP===================--------------->
     <?php
-     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
-      // Escape user inputs to prevent SQL injection
-      $name = $conn->real_escape_string($_POST['name']);
-      $address = $conn->real_escape_string($_POST['address']);
-      $agreement = $conn->real_escape_string($_FILES['agreement']);
-      $others = $conn->real_escape_string($_FILES['others']);
-      $start = $conn->real_escape_string($_POST['start']);
-      $expire = $conn->real_escape_string($_POST['expire']);
-      $backname = $conn->real_escape_string($_POST['bankname']);
-      $branch = $conn->real_escape_string($_POST['branch']);
-      $accountname = $conn->real_escape_string($_POST['accountname']);
-      $accountnumber = $conn->real_escape_string($_POST['accountnumber']);
-      $accounttype = $conn->real_escape_string($_POST['accounttype']);
-      $cancel_cheque = $conn->real_escape_string($_FILES['cancel_cheque']);
-      $ifsc_code = $conn->real_escape_string($_POST['ifsc_code']);
-      $gst1 = $conn->real_escape_string($_FILES['gst1']);
-      $gst2 = $conn->real_escape_string($_FILES['gst2']);
-      $gst3 = $conn->real_escape_string($_FILES['gst3']);
-      $coi = $conn->real_escape_string($_FILES['coi']);
-      $pan = $conn->real_escape_string($_FILES['pan']);
-      $liscence = $conn->real_escape_string($_FILES['liscence']);
-      $other = $conn->real_escape_string($_FILES['other']);
-      $ownerdesig = $conn->real_escape_string($_POST['ownerdesig']);
-      $ownername = $conn->real_escape_string($_POST['ownername']);
-      $ownercontact = $conn->real_escape_string($_POST['ownercontact']);
-      $ownereamil = $conn->real_escape_string($_POST['ownereamil']);
-      $account_name = $conn->real_escape_string($_POST['account_name']);
-      $accountcontact = $conn->real_escape_string($_POST['accountcontact']);
-      $accounteamil = $conn->real_escape_string($_POST['accounteamil']);
-      $fielddesig = $conn->real_escape_string($_POST['fielddesig']);
-      $feildname = $conn->real_escape_string($_POST['feildname']);
-      $feildcontact = $conn->real_escape_string($_POST['feildcontact']);
-      $feildeamil = $conn->real_escape_string($_POST['feildeamil']);
-      $desig = $conn->real_escape_string($_POST['desig']);
-      $nam = $conn->real_escape_string($_POST['nam']); 
-      $contact = $conn->real_escape_string($_POST['contact']);
-      $eamil = $conn->real_escape_string($_POST['eamil']);
-      
-      
-      
-      
-      
 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+    require_once "masterdatabase.php";
 
-      // Similarly, escape other form inputs
+    // Function to sanitize input
+    function sanitize_input($conn, $data) {
+        return mysqli_real_escape_string($conn, htmlspecialchars(trim($data)));
+    }
+
+    // Function to handle file uploads
+    function uploadFile($file) {
+        $uploadDirectory = "uploads/";
+        $fileName = basename($file['name']);
+        $targetFilePath = $uploadDirectory . $fileName;
+
+        // Check if file was uploaded without errors
+        if ($file['error'] === UPLOAD_ERR_OK) {
+            // Move the file to the upload directory
+            if (move_uploaded_file($file['tmp_name'], $targetFilePath)) {
+                return $targetFilePath;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+   
+
+    $name = isset($_POST['name']) ? sanitize_input($conn, $_POST['name']) : '';
+    $address = isset($_POST['address']) ? sanitize_input($conn, $_POST['address']) : '';
+    $start = isset($_POST['start']) ? sanitize_input($conn, $_POST['start']) : '';
+    $expire = isset($_POST['expire']) ? sanitize_input($conn, $_POST['expire']) : '';
+    $bank_name = isset($_POST['bank_name']) ? sanitize_input($conn, $_POST['bank_name']) : '';
+    $branch = isset($_POST['branch']) ? sanitize_input($conn, $_POST['branch']) : '';
+    $accountname = isset($_POST['accountname']) ? sanitize_input($conn, $_POST['accountname']) : '';
+    $accountnumber = isset($_POST['accountnumber']) ? sanitize_input($conn, $_POST['accountnumber']) : '';
+    $accounttype = isset($_POST['accounttype']) ? sanitize_input($conn, $_POST['accounttype']) : '';
+    $ifsc_code = isset($_POST['ifsc_code']) ? sanitize_input($conn, $_POST['ifsc_code']) : '';
+    $ownerdesig = isset($_POST['ownerdesig']) ? sanitize_input($conn, $_POST['ownerdesig']) : '';
+    $ownername = isset($_POST['ownername']) ? sanitize_input($conn, $_POST['ownername']) : '';
+    $ownercontact = isset($_POST['ownercontact']) ? sanitize_input($conn, $_POST['ownercontact']) : '';
+    $owneremail = isset($_POST['owneremail']) ? sanitize_input($conn, $_POST['owneremail']) : '';
+    $accountdesig = isset($_POST['accountdesig']) ? sanitize_input($conn, $_POST['accountdesig']) : '';
+    $account_name = isset($_POST['account_name']) ? sanitize_input($conn, $_POST['account_name']) : '';
+    $accountcontact = isset($_POST['accountcontact']) ? sanitize_input($conn, $_POST['accountcontact']) : '';
+    $accountemail = isset($_POST['accountemail']) ? sanitize_input($conn, $_POST['accountemail']) : '';
+    $fielddesig = isset($_POST['fielddesig']) ? sanitize_input($conn, $_POST['fielddesig']) : '';
+    $fieldname = isset($_POST['fieldname']) ? sanitize_input($conn, $_POST['fieldname']) : '';
+    $fieldcontact = isset($_POST['fieldcontact']) ? sanitize_input($conn, $_POST['fieldcontact']) : '';
+    $fieldemail = isset($_POST['fieldemail']) ? sanitize_input($conn, $_POST['fieldemail']) : '';
+    $desig = isset($_POST['desig']) ? sanitize_input($conn, $_POST['desig']) : '';
+    $nam = isset($_POST['nam']) ? sanitize_input($conn, $_POST['nam']) : '';
+    $contact = isset($_POST['contact']) ? sanitize_input($conn, $_POST['contact']) : '';
+    $email = isset($_POST['email']) ? sanitize_input($conn, $_POST['email']) : '';
+    $totalGst = isset($_POST['totalGst']) ? sanitize_input($conn, $_POST['totalGst']) : '';
+   
+    // file Uploads
+    $agreementPath = isset($_FILES['agreement']) ? uploadFile($_FILES['agreement']) : '';
+    $othersPath = isset($_FILES['others']) ? uploadFile($_FILES['others']) : '';
+    $cancel_chequePath = isset($_FILES['cancel_cheque']) ? uploadFile($_FILES['cancel_cheque']) : '';
+    $gst1Path = isset($_FILES['gst1']) ? uploadFile($_FILES['gst1']) : '';
+    $gst2Path = isset($_FILES['gst2']) ? uploadFile($_FILES['gst2']) : '';
+    $gst3Path = isset($_FILES['gst3']) ? uploadFile($_FILES['gst3']) : '';
+    $coiPath = isset($_FILES['coi']) ? uploadFile($_FILES['coi']) : '';
+    $panPath = isset($_FILES['pan']) ? uploadFile($_FILES['pan']) : '';
+    $licensePath = isset($_FILES['license']) ? uploadFile($_FILES['license']) : '';
+    $otherPath = isset($_FILES['other']) ? uploadFile($_FILES['other']) : '';
+    
+
+    if ($agreementPath !== false && $othersPath !== false && $cancel_chequePath !== false && $gst1Path !== false && $gst2Path !== false && $gst3Path !== false && $coiPath !== false && $panPath !== false && $licensePath !== false && $otherPath !== false && $name !== '' && $address !== '' /* Add conditions for other required fields */) {
+      // Prepare SQL statement
+      $sql = "INSERT INTO customers (name, address, start, expire, bank_name, branch, accountname, accountnumber, accounttype, ifsc_code, ownerdesig, ownername, ownercontact, owneremail, accountdesig, account_name, accountcontact, accountemail, fielddesig, fieldname, fieldcontact, fieldemail, desig, nam, contact, email, totalGst, agreement, others, cancel_cheque, gst1, gst2, gst3, coi, pan, license, other) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      $stmt = mysqli_stmt_init($conn);
   
-      // Insert data into database
-      $sql = "INSERT INTO customer_form (name, address) VALUES ('$name', '$address')";
-      // Execute query
-      if ($conn->query($sql) === TRUE) {
-          echo "New record created successfully";
+      if (mysqli_stmt_prepare($stmt, $sql)) {
+          // Bind parameters and execute statement
+          mysqli_stmt_bind_param($stmt, "sssssssssssssssssssssssssssssssssssss", 
+          $name, $address, $start, $expire, $bank_name, $branch, $accountname, $accountnumber, $accounttype, $ifsc_code, $ownerdesig, $ownername, $ownercontact, $owneremail, $accountdesig, $account_name, $accountcontact, $accountemail, $fielddesig, $fieldname, $fieldcontact, $fieldemail, $desig, $nam, $contact, $email, $totalGst, $agreementPath, $othersPath, $cancel_chequePath, $gst1Path, $gst2Path, $gst3Path, $coiPath, $panPath, $licensePath, $otherPath);
+          
+          mysqli_stmt_execute($stmt);
+          echo "<div class='alert alert-success'>Upload successful</div>";
       } else {
-          echo "Error: " . $sql . "<br>" . $conn->error;
+          echo "<div class='alert alert-danger'>Something went wrong: " . mysqli_error($conn) . "</div>";
       }
+  } else {
+      echo "<div class='alert alert-danger'>File upload failed or required fields were not filled.</div>";
   }
-  ?>
+}
+?>  
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <!---------------------===========DATABASE PHP END===================--------------->
 
       <h1>Customer Form</h1>
 
@@ -427,8 +451,8 @@ if (!isset($_SESSION['user'])) {
             <input type="file" id="pan" name="pan" accept=".pdf, .doc, .docx" required>
           </div>
           <div class="grid-item">
-            <label for="liscence">Liscence:</label>
-            <input type="file" id="liscence" name="liscence" accept=".pdf, .doc, .docx" required>
+            <label for="license">License:</label>
+            <input type="file" id="license" name="license" accept=".pdf, .doc, .docx" required>
           </div>
           <div class="grid-item">
             <label for="other">Others:</label>
@@ -482,7 +506,7 @@ if (!isset($_SESSION['user'])) {
         <input type="text" id="ownercontact" name="ownercontact" placeholder="Contact" required>
       </div>
       <div class="grid-item">
-        <input type="text" id="ownereamil" name="owneremail" placeholder="email" required>
+        <input type="text" id="owneremail" name="owneremail" placeholder="email" required>
       </div>
 
       <div class="grid-item">
@@ -490,26 +514,26 @@ if (!isset($_SESSION['user'])) {
         <input type="text" id="accountdesig" name="accountdesig" placeholder ="Designation" required>
       </div>
       <div class="grid-item">
-        <input type="text" id="accountname" name="accountname" placeholder="Name" required>
+        <input type="text" id="account_name" name="account_name" placeholder="Name" required>
       </div>
       <div class="grid-item">
         <input type="text" id="accountcontact" name="accountcontact" placeholder="Contact" required>
       </div>
       <div class="grid-item">
-        <input type="text" id="accounteamil" name="accountemail" placeholder="email" required>
+        <input type="text" id="accountemail" name="accountemail" placeholder="email" required>
       </div>
       <div class="grid-item">
         <label for="fielddesig">Feild Team:</label>
         <input type="text" id="fielddesig" name="fielddesig" placeholder ="Designation" required>
       </div>
       <div class="grid-item">
-        <input type="text" id="feildname" name="feildname" placeholder="Name" required>
+        <input type="text" id="fieldname" name="fieldname" placeholder="Name" required>
       </div>
       <div class="grid-item">
-        <input type="text" id="fieldcontact" name="dieldcontact" placeholder="Contact" required>
+        <input type="text" id="fieldcontact" name="fieldcontact" placeholder="Contact" required>
       </div>
       <div class="grid-item">
-        <input type="text" id="fieldeamil" name="fieldemail" placeholder="email" required>
+        <input type="text" id="fieldemail" name="fieldemail" placeholder="email" required>
       </div>
       <div class="grid-item">
         <label for="desig">Owner:</label>
@@ -522,7 +546,7 @@ if (!isset($_SESSION['user'])) {
         <input type="text" id="contact" name="contact" placeholder="Contact" required>
       </div>
       <div class="grid-item">
-        <input type="text" id="eamil" name="email" placeholder="email" required>
+        <input type="text" id="email" name="email" placeholder="email" required>
       </div>
 
       <a href="data.php"> Database</a>

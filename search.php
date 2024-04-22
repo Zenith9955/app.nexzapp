@@ -100,6 +100,14 @@ $connection->close();
           </div>
         </li>
         <li class="dropdown">
+          <a href="#">Tracker &#9662;</a>
+          <div class="dropdown-content">
+            <a href="tracker1.php">Tracker 1 </a>
+            <a href="#">Tracker 2</a>
+            <a href="#">Tracker 3</a>
+          </div>
+        </li>
+        <li class="dropdown">
           <a href="#">Profile &#9662;</a>
           <div class="dropdown-content">
           <a href="logout.php">Sign Out</a>
@@ -110,18 +118,23 @@ $connection->close();
     </nav>
   </header>
     <style>
-        body {
-            margin: 20px;
-            background-color: #fff;
-            color: #333;
-        }
+          form {
+          display: flex;
+          justify-content: none;
+          margin-top: 100px;
+          }
+          label {
+          margin-right: 10px;
+          
+          }
         table {
             border-collapse: collapse;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 5px;
         }
         th, td {
             border: 1px solid #ddd;
+            margin: 100px;
             padding: 5px;
             text-align: left;
         }
@@ -133,7 +146,7 @@ $connection->close();
             background-color: #f2f2f2;
         }
         form {
-            margin-bottom: 20px;
+            margin-bottom: 40px;
         }
         label, select, input, button {
             font-size: 20px;

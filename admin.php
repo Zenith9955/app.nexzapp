@@ -8,9 +8,6 @@
         body {
         font-family: Arial, sans-serif;
         background-color: #f3f3f3;
-        background-image: url('css/bg.jpg'); /* Path to your image */
-        background-size: cover; /* Cover the entire page */
-        background-position: center; 
         margin: 0;
         padding: 0;
         display: flex;
@@ -97,9 +94,9 @@
     
     
     button[type="submit"] {
-        width: 20%;
+        width: 50%;
         padding: 10px;
-        margin-top: 10px;
+        margin-top: 20px;
         background-color: #007bff;
         color: #fff;
         border: none;
@@ -170,12 +167,15 @@
         $prepareStmt = mysqli_stmt_prepare($stmt,$sql);
         if($prepareStmt){
         mysqli_stmt_bind_param($stmt, "sssss", $loginid, $name, $email, $passwordHash, $passwordReapeat);
-        mysqli_stmt_execute($stmt);
-        echo "<div class='alert alert-success'>User registered successfully</div>";   
-        }else
-        die("Something went wrong");    
+        if ($stmt->execute()) {
+            echo "<script>alert('Data Inserted Successfully')</script>";
+        } else {
+            echo "Error: " . $stmt->error;
+        }   
+    }
     }
 }
+
     ?>
         <div class="logo">
             <img src="css/logo.jpg" alt="Logo">
@@ -188,7 +188,7 @@
             <input type="text" name="email" placeholder="Enter your Email" Required>
             <input type="password" name="password" placeholder="Enter your Password" Required>
             <input type="password" name="repeat_password" placeholder="Confirm your Password" Required>
-            <button type="submit" name = "submit" >SignUp</button>
+            <button type="submit" name = "submit" >Sign Up</button>
         </form>
     </div>
 </div>

@@ -11,190 +11,106 @@ if (!isset($_SESSION['user'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Onremote inhouse software</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <!-------------------CSS START----------------------------------------->
 <style>
-    body {
-        font-family: 'Roboto', sans-serif; /* Apply Roboto font to the entire document */
-      }
-      
-    h1,h2,h3,h4,h5,h6{
-    color:#4b4b4b;
-    }
-    header {
-    background-color: #ffffff;
-    color: #333; /* Dark gray */
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .logo img {
-    height: 90px; /* Adjusted logo size */
-  }
-  
-  /* Navigation styles */
-  nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  nav ul li {
-    display: inline-block;
-  }
-  
-  nav ul li a {
-    color: #333; /* Dark gray */
-    text-decoration: none;
-    padding: 15px 20px; /* Reduced padding */
-    display: block;
-    transition: background-color 0.3s; /* Smooth hover effect */
-  }
-  
-  nav ul li a:hover {
-    background-color: #e0e0e0; /* Lighter gray on hover */
-  }
-  
-  /* Dropdown styles */
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
-  
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9; /* Light gray */
-    min-width: 200px;
-    z-index: 1;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  }
-  
-  .dropdown-content a {
-    color: #333; /* Dark gray */
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-  }
-  
-  .dropdown-content a:hover {
-    background-color: #e0e0e0; /* Lighter gray on hover */
-  }
-  
-  .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .dropdown button {
-    background-color: #ababab; /* Green background */
-    color: white; /* White text color */
-    border: none; /* No border */
-    padding: 05px 10px; /* Padding */
-    text-align: center; /* Center text */
-    text-decoration: none; /* No underline */
-    display: inline-block;
-    font-size: 14px; /* Font size */
-    cursor: pointer; /* Cursor on hover */
-    border-radius: 4px; /* Rounded corners */
-  }
-  
-  .dropdown button:hover {
-    background-color: #333; /* Darker green background on hover */
-  }
-  
-  /* CSS for the Sign Out link */
-  a.signout-link {
-    color: #333; /* Dark gray text color */
-    text-decoration: none; /* Remove underline */
-    padding: 10px 20px; /* Add padding */
-    border: 1px solid #333; /* Add border */
-    border-radius: 4px; /* Add rounded corners */
-    background-color: #fff; /* White background */
-  }
-  
-  a.signout-link:hover {
-    background-color: #e0e0e0; /* Light gray background on hover */
-    color: #000; /* Darken text color on hover */
-  }
-    .box {
-        max-width: 1300px;
-        margin: 90px auto; /* Add space around the container */
-        box-shadow: 0px 5px 2px rgba(0, 0, 0, 0.2); /* Adding box shadow */
-        border-radius: 5px; /* Adding border radius for rounded corners */
-        padding: 20px; 
-        /* Adding padding inside the box */
-      }
-      
-      .grid-container {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 40px; /* Add space between grid items */
-      }
-      
-      .grid-item {
-        display: flex;
-        flex-direction: row; /* Display label and input in a row */
-        align-items: center; /* Align items vertically */
-      }
-  
-      /* Apply styles to form labels */
-      label {
-        margin-right: 10px; /* Add space between label and input */
-      }
-      
-      /* Apply styles to form inputs */
-      input[type="text"],
-    input[type="date"],
-    select,
-    input[type="file"] {
-      width: 100%;
-      padding: 5px; /* Increase padding for better spacing */
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-      margin-bottom: 0px;
-    }
-      /* Button styling */
-      .button-container {
-        text-align: center; /* Center the button horizontally */
-        margin-top: 20px;
-        padding: 5px 30px 10px 200px;/* Add space between form fields and button */
-    }
-    
-    .button-container button {
-        padding: 10px 50px; /* Add padding to the button */ 
-        background-color: #007bff; /* Blue color for button */
-        color: #fff; /* White text color */
-        border: none; /* Remove button border */
-        border-radius: 30px; /* Rounded corners */
-        cursor: pointer; /* Cursor style on hover */
-        transition: background-color 0.3s; /* Smooth transition for background color */
-        margin: 0 auto; /* Center the button horizontally */
-    }
-    .button-container button:hover {
-        background-color: #0056b3; /* Darker blue on hover */
-    }
+   body {
+ background-color: #f5f5f5;
+}
 
-      /* Add space between sections */
-      .account-section {
-        margin-top: 30px;
-      }
-      .kyc-section{
-        margin-top: 30px;
-      }
-      .contact-section {
-        margin-top: 30px; /* Add space between sections */
-    }
-  
+.box {
+  max-width: 1300px;
+  margin: 150px auto;
+  border-radius: 5px;
+  padding: 30px;
+}
 
-  a:hover {
-    background-color: #e0e0e0;
-    color: #000;
-  }
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+label {
+  margin-right: 10px;
+}
+
+input[type="text"],
+input[type="date"],
+select,
+input[type="file"] {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px; /* Changed to 10px for some space */
+}
+
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.button-container button {
+  padding: 10px 50px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 0 auto;
+}
+
+.button-container button:hover {
+  background-color: #0056b3;
+}
+
+.account-section,
+.kyc-section,
+.contact-section {
+  margin-top: 30px;
+}
+
+.database {
+  padding: 2px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.database a {
+  text-decoration: none;
+  color: #777;
+  font-weight: bold;
+}
+
+.database a:hover {
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 15px;
+  padding: 0;
+}
+
+/* Override background for form elements */
+form {
+  background-color: #fff; /* Set background color for the form */
+  padding: 20px; /* Add padding to the form */
+  border-radius: 5px; /* Rounded corners for the form */
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1); /* Add shadow to the form */
+}
+
   </style>
-
   
   <!-------------------CSS END----------------------------------------->
 
@@ -239,6 +155,14 @@ if (!isset($_SESSION['user'])) {
             <a href="#">Manage Services</a>
             <a href="#">Fiber Services</a>
             <a href="#">Port Fiber</a>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="#">Tracker &#9662;</a>
+          <div class="dropdown-content">
+            <a href="tracker1.php">Tracker 1 </a>
+            <a href="#">Tracker 2</a>
+            <a href="#">Tracker 3</a>
           </div>
         </li>
         <li class="dropdown">
@@ -548,11 +472,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
       <div class="grid-item">
         <input type="text" id="email" name="email" placeholder="email" required>
       </div>
-
-      <a href="vendordata.php"> Database</a>
-     
+      
+      <div class = "database">
+      <a href="vendordata.php">Vendor Database</a>
+      </div>
       <div class="button-container">
         <button type="submit" name="submit">Submit</button>
+        
       </div>
     </form>
   </div>

@@ -20,19 +20,13 @@ if ($conn->connect_error) {
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     // Assuming you have a function to safely fetch and verify the file names before deleting
-    $stmt = $conn->prepare("SELECT agreement, others, cancel_cheque, coi, pan, license, other FROM vendor WHERE id = ?");
+    $stmt = $conn->prepare("SELECT agreement, others FROM vendor WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
     if ($row = $result->fetch_assoc()) {
         @unlink('uploads/' . basename($row['agreement']));
         @unlink('uploads/' . basename($row['others']));
-        @unlink('uploads/' . basename($row['cancel_cheque']));
-        @unlink('uploads/' . basename($row['coi']));
-        @unlink('uploads/' . basename($row['pan']));
-        @unlink('uploads/' . basename($row['license']));
-        @unlink('uploads/' . basename($row['other']));
-
     }
     $stmt->close();
 
@@ -63,31 +57,31 @@ $result = $stmt->get_result();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Vendor Database</title>
+    <title>Customers Database</title>
     <link rel="stylesheet" href="css/style.css"> <!-- Make sure to link to the correct CSS file -->
 </head>
 <style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 10px;
-    background-color: #fff;
-     /* Adding a light background color */
+  form {
+  display: flex;
+  justify-content: none;
+  margin-top: 160px;
 }
 
-/* Styling for tables */
+
 
 table {
     width: 100%;
+    margin: 10px auto;
     border-collapse: collapse;
     overflow: hidden; /* Ensuring borders are consistent */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 2px; /* Adding border radius for a softer look */
     border: 5px solid #ccc; /* Adding a subtle shadow for depth */
+    font-size: 13px
 }
 
 table th, table td {
-    padding: 1px; /* Increasing padding for better spacing */
+    padding: 1px;
     text-align: left;
 }
 
@@ -109,7 +103,7 @@ input[type="text"],
 button {
     padding: 10px; /* Making input and button sizes consistent */
     font-size: 12px;
-    border-radius: 8px; /* Adding border radius for a softer look */
+    border-radius: 2px; /* Adding border radius for a softer look */
     border: 1px solid #ccc; /* Adding a light border for input fields */
 }
 
@@ -132,14 +126,10 @@ a {
     color: #007bff; /* Using the primary color for links */
 }
 
-a:hover {
-    text-decoration: underline; /* Underlining links on hover for better feedback */
-}
 </style>
 <!-----------------------=+===========CSS END=======================---------->
 <body>
 <header>
-    
     <div class="logo">
       <img src="css/logo.jpg" alt="Logo">
     </div>
@@ -179,6 +169,14 @@ a:hover {
           </div>
         </li>
         <li class="dropdown">
+          <a href="#">Tracker &#9662;</a>
+          <div class="dropdown-content">
+            <a href="tracker1.php">Tracker 1 </a>
+            <a href="#">Tracker 2</a>
+            <a href="#">Tracker 3</a>
+          </div>
+        </li>
+        <li class="dropdown">
           <a href="#">Profile &#9662;</a>
           <div class="dropdown-content">
           <a href="logout.php">Sign Out</a>
@@ -193,8 +191,6 @@ a:hover {
 <form action="" method="get">
     <input type="text" name="search" placeholder="Search by name..." value="<?= htmlspecialchars($search) ?>">
     <button type="submit">Search</button>
-   
-
 </form>
 
 <table border="1">
@@ -210,6 +206,11 @@ a:hover {
         <th>Account Number</th>
         <th>Account Type</th>
         <th>IFSC Code</th>
+        <th>Owner</th>
+        <th>Account</th>
+        <th>Field</th>
+        <th>Owner</th>
+        <th>Documents</th>
         <th>Actions</th>
     </tr>
     <?php while ($row = $result->fetch_assoc()): ?>
@@ -217,14 +218,13 @@ a:hover {
             <td><?= htmlspecialchars($row['name']) ?></td>
             <td><?= htmlspecialchars($row['address']) ?></td>
             <td>
-                <a href="?uploads/<?= urlencode($row['agreement']) ?>" download="<?= htmlspecialchars($row['agreement']) ?>">Download Agreement</a><br>
-                <a href="?uploads/<?= urlencode($row['others']) ?>" download="<?= htmlspecialchars($row['others']) ?>">Download Others</a><br>
-                <a href="?uploads/<?= urlencode($row['cancel_cheque']) ?>" download="<?= htmlspecialchars($row['cancel_cheque']) ?>">Download Cancel Cheque</a><br>
-                <a href="?uploads/<?= urlencode($row['coi']) ?>" download="<?= htmlspecialchars($row['coi']) ?>">Download COI</a><br>
-                <a href="?uploads/<?= urlencode($row['pan']) ?>" download="<?= htmlspecialchars($row['pan']) ?>">Download PAN</a><br>
-                <a href="?uploads/<?= urlencode($row['license']) ?>" download="<?= htmlspecialchars($row['license']) ?>">Download License </a><br>   
-                <a href ="?uploads/<?= urlencode($row['other']) ?>" download="<?= htmlspecialchars($row['other']) ?>">Download Others</a>
-              
+            <a href="?uploads/=<?= urlencode(basename($row['agreement'])) ?>"><?= htmlspecialchars($row['agreement']) ?></a><br>
+            <a href="?uploads/=<?= urlencode(basename($row['others'])) ?>"><?= htmlspecialchars($row['others']) ?></a><br>
+            <a href="?uploads/=<?= urlencode(basename($row['cancel_cheque'])) ?>"><?= htmlspecialchars($row['cancel_cheque']) ?></a><br>
+            <a href="?uploads/=<?= urlencode(basename($row['coi'])) ?>"><?= htmlspecialchars($row['coi']) ?></a><br>
+            <a href="?uploads/=<?= urlencode(basename($row['pan'])) ?>"><?= htmlspecialchars($row['pan']) ?></a><br>
+            <a href="?uploads/=<?= urlencode(basename($row['license'])) ?>"><?= htmlspecialchars($row['license']) ?></a><br>
+            <a href="?uploads/=<?= urlencode(basename($row['other'])) ?>"><?= htmlspecialchars($row['other']) ?></a>
               </td>
 
             <td><?= htmlspecialchars($row['start']) ?></td>
@@ -236,6 +236,33 @@ a:hover {
             <td><?= htmlspecialchars($row['accounttype']) ?></td>
             <td><?= htmlspecialchars($row['ifsc_code']) ?></td>
             <td>
+             <?= htmlspecialchars($row['ownerdesig']) ?><br>
+             <?= htmlspecialchars($row['ownername']) ?><br>
+             <?= htmlspecialchars($row['owneremail']) ?><br>
+             <?= htmlspecialchars($row['ownercontact']) ?><br>
+            </td>
+            <td>
+             <?= htmlspecialchars($row['accountdesig']) ?><br>
+             <?= htmlspecialchars($row['accountname']) ?><br>
+             <?= htmlspecialchars($row['accountemail']) ?><br>
+             <?= htmlspecialchars($row['accountcontact']) ?><br>
+            </td>
+            <td>
+             <?= htmlspecialchars($row['fielddesig']) ?><br>
+             <?= htmlspecialchars($row['fieldname']) ?><br>
+             <?= htmlspecialchars($row['fieldemail']) ?><br>
+             <?= htmlspecialchars($row['fieldcontact']) ?><br>
+            </td>
+            <td>
+             <?= htmlspecialchars($row['desig']) ?><br>
+             <?= htmlspecialchars($row['name']) ?><br>
+             <?= htmlspecialchars($row['email']) ?><br>
+             <?= htmlspecialchars($row['contact']) ?><br>
+            </td>
+            <td>
+            <a href="downvendor.php?id=<?= $row['id'] ?>">Download</a>
+            </td>
+                <td>
                 <a href="?delete=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
             </td>
         </tr>

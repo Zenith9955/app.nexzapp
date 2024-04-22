@@ -55,6 +55,14 @@ if (!isset($_SESSION['user'])) {
           </div>
         </li>
         <li class="dropdown">
+          <a href="#">Tracker &#9662;</a>
+          <div class="dropdown-content">
+            <a href="tracker1.php">Tracker 1 </a>
+            <a href="#">Tracker 2</a>
+            <a href="#">Tracker 3</a>
+          </div>
+        </li>
+        <li class="dropdown">
           <a href="#">Profile &#9662;</a>
           <div class="dropdown-content">
           <a href="logout.php">Sign Out</a>

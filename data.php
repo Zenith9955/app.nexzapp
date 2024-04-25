@@ -20,7 +20,7 @@ if ($conn->connect_error) {
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     // Assuming you have a function to safely fetch and verify the file names before deleting
-    $stmt = $conn->prepare("SELECT agreement, others FROM customer WHERE id = ?");
+    $stmt = $conn->prepare("SELECT agreement, others FROM customers WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -51,6 +51,18 @@ if ($search) {
 
 $stmt->execute();
 $result = $stmt->get_result();
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch active vendors
+$sqlActive = "SELECT name FROM customers WHERE status = 'Active'";
+$resultActive = $conn->query($sqlActive);
+
+// Fetch inactive vendors
+$sqlInactive = "SELECT name, Inactive FROM customers WHERE status = 'Inactive'";
+$resultInactive = $conn->query($sqlInactive);
 ?>
 
 <!DOCTYPE html>
@@ -58,74 +70,141 @@ $result = $stmt->get_result();
 <head>
     <meta charset="UTF-8">
     <title>Customers Database</title>
-    <link rel="stylesheet" href="css/style.css"> 
+    <link rel="stylesheet" href="css/style.css"> <!-- Make sure to link to the correct CSS file -->
 </head>
-
-
-<!---------------------------CCSSSS START----------------------------------------->
 <style>
-  form {
-  display: flex;
-  justify-content: none;
-  margin-top: 160px;
+body {
+     font-family: Arial, sans-serif;
+     background-color: #fff;
+     }
+
+ main {
+     max-width: 100%;
+     margin: 120px auto;
+     background-color: #fff;
+     padding: 10px;
+     border-radius: 8px;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+ }
+
+ h1 {
+     color: #4b4b4b;
+     text-align: left;
+     font-size: 20px;
+     margin-bottom: 0px;
+ }
+
+ form {
+ display: flex;
+ justify-content: left; /* or space-around */
+   padding: 5px; /* Decreased padding */
 }
 
-table {
+
+ table {
+     width: 100%;
+     margin: 3px auto;
+     border-collapse: collapse;
+     overflow: hidden; /* Ensuring borders are consistent */
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+     border-radius: 2px; /* Adding border radius for a softer look */
+     border: 5px solid #ccc; /* Adding a subtle shadow for depth */
+     font-size: 15px;
+ }
+
+ table th, table td {
+     padding: 2px;
+     text-align: center;
+     border-bottom: 1px solid #ccc;
+     border-right: 1px solid #ccc;
+ }
+
+ table th {
+     background-color:#87CEFA;
+     color: #656565; /* Text color for table headers */
+ }
+
+ table tr:nth-child(even) {
+     background-color: #f9f9f9; /* Lighter shade for even rows */
+ }
+
+ table tr:hover {
+     background-color: #e6e6e6; /* Darker shade on hover for better feedback */
+ }
+
+ /* Styling for form elements */
+ input[type="text"] {
+     padding: 15px; /* Making input and button sizes consistent */
+     font-size: 12px;
+     border-radius: 2px; /* Adding border radius for a softer look */
+     border: 1px solid #ccc; /* Adding a light border for input fields */
+ }
+
+ button {
+     padding: 10px 10px;
+     cursor: pointer;
+     background-color: #007bff; /* Adding a primary color for buttons */
+     color: #fff; /* Making button text white for better contrast */
+     border: none;
+     transition: background-color 0.3s ease; /* Adding smooth transition on hover */
+ }
+
+ button:hover {
+     background-color: #0056b3; /* Darkening button color on hover */
+ }
+ 
+
+ /* Styling for links */
+ a {
+     text-decoration: none;
+     color: #007bff; /* Using the primary color for links */
+ }
+ .Combined-Vendors {
+    display: flex;
+    justify-content: center;
+    gap: 20%; /* Adjust this value for the desired space between vendor boxes */
     width: 100%;
-    margin: 10px auto;
-    border-collapse: collapse;
-    overflow: hidden; /* Ensuring borders are consistent */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 2px; /* Adding border radius for a softer look */
-    border: 5px solid #ccc; /* Adding a subtle shadow for depth */
-    font-size: 13px
 }
 
-table th, table td {
-    padding: 1px;
-    text-align: left;
+/* Style for vendor boxes */
+.vendor-box {
+    padding: 10px;
+    background-color: #fff;
+    /* margin: 5px; Remove margin to reduce space */
+    width: 80px; /* Initial width */
+    height: 0;
+    padding-bottom: 80px; /* Same as width to make it square */
+    position: relative;
 }
 
-table th {
-    background-color: #f2f2f2;
+/* Status text style */
+.status {
+    font-size: 18px;
+    color: #333;
+    text-align: center;
 }
 
-table tr:nth-child(even) {
-    background-color: #f9f9f9; /* Slightly lighter shade for even rows */
+/* Count text style */
+.count {
+    font-size: 36px;
+    font-weight: bold;
+    color: #007bff;
+    margin-top: 10px;
+    text-align: center;
 }
 
-table tr:hover {
-    background-color: #e6e6e6; /* Darker shade on hover for better feedback */
+.button-container {
+    display: flex;
+    justify-content: flex-end; /* Aligns button to the right within the container */
 }
 
-/* Styling for form elements */
-
-input[type="text"],
-button {
-    padding: 10px; /* Making input and button sizes consistent */
-    font-size: 12px;
-    border-radius: 2px; /* Adding border radius for a softer look */
-    border: 1px solid #ccc; /* Adding a light border for input fields */
+.add-button:hover {
+    background-color: #ababab;
+    color: white;
 }
 
-button {
-    cursor: pointer;
-    background-color: #007bff; /* Adding a primary color for buttons */
-    color: #fff; /* Making button text white for better contrast */
-    border: none;
-    transition: background-color 0.3s ease; /* Adding smooth transition on hover */
-}
 
-button:hover {
-    background-color: #0056b3; /* Darkening button color on hover */
-}
 
-/* Styling for links */
-
-a {
-    text-decoration: none;
-    color: #007bff; /* Using the primary color for links */
-}
 </style>
 <!-----------------------=+===========CSS END=======================---------->
 <body>
@@ -138,8 +217,8 @@ a {
         <li class="dropdown">
           <a href="index.php">Master &#9662;</a>
           <div class="dropdown-content">
-            <a href="vendor.php">Vendor</a>
-            <a href="cust.php">Customer</a>
+            <a href="vendordata.php">Vendor</a>
+            <a href="data.php">Customer</a>
             <a href="#">State</a>
           </div>
         </li>
@@ -171,7 +250,8 @@ a {
         <li class="dropdown">
           <a href="#">Tracker &#9662;</a>
           <div class="dropdown-content">
-            <a href="tracker1.php">Tracker 1 </a>
+          <a href="implement.php">New-Links</a>  
+          <a href="tracker1.php">Tracker 1 </a>
             <a href="#">Tracker 2</a>
             <a href="#">Tracker 3</a>
           </div>
@@ -186,55 +266,63 @@ a {
       </ul>
     </nav>
   </header>
-
+  <main>
+  <?php
+// Assuming $resultActive and $resultInactive are defined and contain data
+$totalActive = ($resultActive->num_rows > 0) ? $resultActive->num_rows : 0;
+$totalInactive = ($resultInactive->num_rows > 0) ? $resultInactive->num_rows : 0;
+?>
+  
+    <div class="grid-container">
+    <div class="Combined-Vendors">
+        <div class="vendor-box active">
+            <div class="status">ACTIVE</div>
+            <div class="count"><?= $totalActive ?></div>
+        </div>
+        <div class="vendor-box inactive">
+            <div class="status">INACTIVE</div>
+            <div class="count"><?= $totalInactive ?></div>
+        </div>
+    </div>
+</div>
 
 <form action="" method="get">
     <input type="text" name="search" placeholder="Search by name..." value="<?= htmlspecialchars($search) ?>">
     <button type="submit">Search</button>
 </form>
+<div class="button-container">
+  <a class="add-button" href="cust.php">Add New Customer</a>
+</div>
 
 <table border="1">
     <tr>
-        <th>Name</th>
+        <th>Customer</th>
         <th>Address</th>
-        <th>Documents</th>
+        <th> Download Documents</th>
         <th>Start Date</th>
         <th>Expire Date</th>
-        <th>Bank Name</th>
-        <th>Branch</th>
-        <th>Account Name</th>
-        <th>Account Number</th>
-        <th>Account Type</th>
-        <th>IFSC Code</th>
+        <th>Status</th>
+        <th>Inactive Date</th>
         <th>Owner</th>
         <th>Account</th>
-        <th>Field</th>
-        <th>Owner</th>
-        <th>Document</th>
-        <th>Actions<th>
+        <th>Field Team</th>
+        <th>Others</th>
+        <th>Actions</th>
     </tr>
     <?php while ($row = $result->fetch_assoc()): ?>
         <tr>
             <td><?= htmlspecialchars($row['name']) ?></td>
             <td><?= htmlspecialchars($row['address']) ?></td>
-            <td>
-            <a href="?uploads/=<?= urlencode(basename($row['agreement'])) ?>"><?= htmlspecialchars($row['agreement']) ?></a><br>
-            <a href="?uploads/=<?= urlencode(basename($row['others'])) ?>"><?= htmlspecialchars($row['others']) ?></a><br>
-            <a href="?uploads/=<?= urlencode(basename($row['cancel_cheque'])) ?>"><?= htmlspecialchars($row['cancel_cheque']) ?></a><br>
-            <a href="?uploads/=<?= urlencode(basename($row['coi'])) ?>"><?= htmlspecialchars($row['coi']) ?></a><br>
-            <a href="?uploads/=<?= urlencode(basename($row['pan'])) ?>"><?= htmlspecialchars($row['pan']) ?></a><br>
-            <a href="?uploads/=<?= urlencode(basename($row['license'])) ?>"><?= htmlspecialchars($row['license']) ?></a><br>
-            <a href="?uploads/=<?= urlencode(basename($row['other'])) ?>"><?= htmlspecialchars($row['other']) ?></a>
 
+            <td>
+            <a href="downvendor.php?id=<?= $row['id'] ?>">Download</a>
             </td>
+
             <td><?= htmlspecialchars($row['start']) ?></td>
             <td><?= htmlspecialchars($row['expire']) ?></td>
-            <td><?= htmlspecialchars($row['bank_name']) ?></td>
-            <td><?= htmlspecialchars($row['branch']) ?></td>
-            <td><?= htmlspecialchars($row['accountname']) ?></td>
-            <td><?= htmlspecialchars($row['accountnumber']) ?></td>
-            <td><?= htmlspecialchars($row['accounttype']) ?></td>
-            <td><?= htmlspecialchars($row['ifsc_code']) ?></td>
+            <td><?= htmlspecialchars($row['Status']) ?></td>
+            <td><?= htmlspecialchars($row['Inactive']) ?></td>
+          
             <td>
              <?= htmlspecialchars($row['ownerdesig']) ?><br>
              <?= htmlspecialchars($row['ownername']) ?><br>
@@ -259,15 +347,14 @@ a {
              <?= htmlspecialchars($row['email']) ?><br>
              <?= htmlspecialchars($row['contact']) ?><br>
             </td>
-            <td>
-            <a href="download.php?id=<?= $row['id'] ?>">Download</a>
-            </td>
+            
                 <td>
                 <a href="?delete=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
             </td>
         </tr>
     <?php endwhile; ?>
 </table>
+</main>
 </body>
 </html>
 <?php

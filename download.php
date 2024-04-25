@@ -54,7 +54,7 @@ form {
 
 h2{
         color:#4b4b4b;
-        text-align: center;
+        text-align: none;
         font-weight: bold;
       }
 
@@ -91,8 +91,8 @@ table tr:hover {
 input[type="text"],
 button {
     
-    padding: 15px; /* Making input and button sizes consistent */
-    font-size: 15px;
+    padding: 10px; /* Making input and button sizes consistent */
+    font-size: 12px;
     border-radius: 2px; /* Adding border radius for a softer look */
     border: 2px solid #ccc; /* Adding a light border for input fields */
 }
@@ -130,8 +130,8 @@ a:hover {
         <li class="dropdown">
           <a href="index.php">Master &#9662;</a>
           <div class="dropdown-content">
-            <a href="vendor.php">Vendor</a>
-            <a href="cust.php">Customer</a>
+            <a href="vendordata.php">Vendor</a>
+            <a href="data.php">Customer</a>
             <a href="#">State</a>
           </div>
         </li>
@@ -163,6 +163,7 @@ a:hover {
         <li class="dropdown">
           <a href="#">Tracker &#9662;</a>
           <div class="dropdown-content">
+          <a href="implement.php">New-Links</a>
             <a href="tracker1.php">Tracker 1 </a>
             <a href="#">Tracker 2</a>
             <a href="#">Tracker 3</a>
@@ -192,7 +193,7 @@ a:hover {
             </tr>
             <!-- Fetch fields from the customers table based on search -->
             <?php
-            $sql = "SELECT name, agreement, others, cancel_cheque, coi, pan, license, other FROM customers"; 
+            $sql = "SELECT name, agreement, others, cancel_cheque, coi, gst1, gst2, gst3, pan, license, other FROM customers"; 
 
             // Check if search parameter is provided
             if(isset($_GET['search']) && !empty($_GET['search'])) {

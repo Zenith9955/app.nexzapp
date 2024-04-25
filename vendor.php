@@ -16,19 +16,19 @@ if (!isset($_SESSION['user'])) {
 <!-------------------CSS START----------------------------------------->
 <style>
    body {
- background-color: #f5f5f5;
+ background-color: #fff;
 }
 
 .box {
   max-width: 1300px;
-  margin: 150px auto;
+  margin: 100px auto;
   border-radius: 5px;
-  padding: 30px;
+  padding: 50px;
 }
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 40px;
 }
 
@@ -98,7 +98,7 @@ input[type="file"] {
 
 h1 {
   text-align: center;
-  margin-top: 15px;
+  margin-top: 5px;
   padding: 0;
 }
 
@@ -109,6 +109,7 @@ form {
   border-radius: 5px; /* Rounded corners for the form */
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1); /* Add shadow to the form */
 }
+
 
   </style>
   
@@ -127,8 +128,8 @@ form {
         <li class="dropdown">
           <a href="index.php">Master &#9662;</a>
           <div class="dropdown-content">
-            <a href="vendor.php">Vendor</a>
-            <a href="cust.php">Customer</a>
+            <a href="vendordata.php">Vendor</a>
+            <a href="data.php">Customer</a>
             <a href="#">State</a>
           </div>
         </li>
@@ -160,6 +161,7 @@ form {
         <li class="dropdown">
           <a href="#">Tracker &#9662;</a>
           <div class="dropdown-content">
+          <a href="implement.php">New-Links</a>
             <a href="tracker1.php">Tracker 1 </a>
             <a href="#">Tracker 2</a>
             <a href="#">Tracker 3</a>
@@ -182,10 +184,8 @@ form {
   
   <div class="box"> <!-- Enclosing the content in a box -->
     <form action="" method="post" enctype="multipart/form-data">
-
     <!---------------------===========DATABASE PHP===================--------------->
     <?php
-
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     require_once "masterdatabase.php";
 
@@ -212,12 +212,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             return false;
         }
     }
-   
 
     $name = isset($_POST['name']) ? sanitize_input($conn, $_POST['name']) : '';
     $address = isset($_POST['address']) ? sanitize_input($conn, $_POST['address']) : '';
     $start = isset($_POST['start']) ? sanitize_input($conn, $_POST['start']) : '';
     $expire = isset($_POST['expire']) ? sanitize_input($conn, $_POST['expire']) : '';
+    $Status = isset($_POST['Status']) ? sanitize_input($conn, $_POST['Status']) : '';
+    $Inactive = isset($_POST['Inactive']) ? sanitize_input($conn, $_POST['Inactive']) : '';
     $bank_name = isset($_POST['bank_name']) ? sanitize_input($conn, $_POST['bank_name']) : '';
     $branch = isset($_POST['branch']) ? sanitize_input($conn, $_POST['branch']) : '';
     $accountname = isset($_POST['accountname']) ? sanitize_input($conn, $_POST['accountname']) : '';
@@ -241,41 +242,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $contact = isset($_POST['contact']) ? sanitize_input($conn, $_POST['contact']) : '';
     $email = isset($_POST['email']) ? sanitize_input($conn, $_POST['email']) : '';
     $totalGst = isset($_POST['totalGst']) ? sanitize_input($conn, $_POST['totalGst']) : '';
-   
+
     // file Uploads
     $agreementPath = isset($_FILES['agreement']) ? uploadFile($_FILES['agreement']) : '';
     $othersPath = isset($_FILES['others']) ? uploadFile($_FILES['others']) : '';
-    $cancel_chequePath = isset($_FILES['cancel_cheque']) ? uploadFile($_FILES['cancel_cheque']) : '';
     $gst1Path = isset($_FILES['gst1']) ? uploadFile($_FILES['gst1']) : '';
     $gst2Path = isset($_FILES['gst2']) ? uploadFile($_FILES['gst2']) : '';
     $gst3Path = isset($_FILES['gst3']) ? uploadFile($_FILES['gst3']) : '';
+    $cancel_chequePath = isset($_FILES['cancel_cheque']) ? uploadFile($_FILES['cancel_cheque']) : '';
     $coiPath = isset($_FILES['coi']) ? uploadFile($_FILES['coi']) : '';
     $panPath = isset($_FILES['pan']) ? uploadFile($_FILES['pan']) : '';
     $licensePath = isset($_FILES['license']) ? uploadFile($_FILES['license']) : '';
     $otherPath = isset($_FILES['other']) ? uploadFile($_FILES['other']) : '';
-    
 
-    if ($agreementPath !== false && $othersPath !== false && $cancel_chequePath !== false && $gst1Path !== false && $gst2Path !== false && $gst3Path !== false && $coiPath !== false && $panPath !== false && $licensePath !== false && $otherPath !== false && $name !== '' && $address !== '' /* Add conditions for other required fields */) {
-      // Prepare SQL statement
-      $sql = "INSERT INTO vendor (name, address, start, expire, bank_name, branch, accountname, accountnumber, accounttype, ifsc_code, ownerdesig, ownername, ownercontact, owneremail, accountdesig, account_name, accountcontact, accountemail, fielddesig, fieldname, fieldcontact, fieldemail, desig, nam, contact, email, totalGst, agreement, others, cancel_cheque, gst1, gst2, gst3, coi, pan, license, other) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-      $stmt = mysqli_stmt_init($conn);
-  
-      if (mysqli_stmt_prepare($stmt, $sql)) {
-          // Bind parameters and execute statement
-          mysqli_stmt_bind_param($stmt, "sssssssssssssssssssssssssssssssssssss", 
-          $name, $address, $start, $expire, $bank_name, $branch, $accountname, $accountnumber, $accounttype, $ifsc_code, $ownerdesig, $ownername, $ownercontact, $owneremail, $accountdesig, $account_name, $accountcontact, $accountemail, $fielddesig, $fieldname, $fieldcontact, $fieldemail, $desig, $nam, $contact, $email, $totalGst, $agreementPath, $othersPath, $cancel_chequePath, $gst1Path, $gst2Path, $gst3Path, $coiPath, $panPath, $licensePath, $otherPath);
-          
-          mysqli_stmt_execute($stmt);
-          echo "<div class='alert alert-success'>Upload successful</div>";
-      } else {
-          echo "<div class='alert alert-danger'>Something went wrong: " . mysqli_error($conn) . "</div>";
-      }
-  } else {
-      echo "<div class='alert alert-danger'>File upload failed or required fields were not filled.</div>";
-  }
+    // Prepare SQL statement
+    $sql = "INSERT INTO vendor (name, address, start, expire, Status, Inactive, bank_name, branch, accountname, accountnumber, accounttype, ifsc_code, ownerdesig, ownername, ownercontact, owneremail, accountdesig, account_name, accountcontact, accountemail, fielddesig, fieldname, fieldcontact, fieldemail, desig, nam, contact, email, totalGst, agreement, others, cancel_cheque, gst1, gst2, gst3, coi, pan, license, other) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = mysqli_stmt_init($conn);
+
+    if (mysqli_stmt_prepare($stmt, $sql)) {
+        // Bind parameters and execute statement
+        mysqli_stmt_bind_param($stmt, "sssssssssssssssssssssssssssssssssssssss", 
+        $name, $address, $start, $expire, $Status, $Inactive, $bank_name, $branch, $accountname, $accountnumber, $accounttype, $ifsc_code, $ownerdesig, $ownername, $ownercontact, $owneremail, $accountdesig, $account_name, $accountcontact, $accountemail, $fielddesig, $fieldname, $fieldcontact, $fieldemail, $desig, $nam, $contact, $email, $totalGst, $agreementPath, $othersPath, $cancel_chequePath, $gst1Path, $gst2Path, $gst3Path, $coiPath, $panPath, $licensePath, $otherPath);
+
+        mysqli_stmt_execute($stmt);
+        echo "<div class='alert alert-success'>Upload successful</div>";
+    } else {
+        echo "<div class='alert alert-danger'>Something went wrong: " . mysqli_error($conn) . "</div>";
+    }
 }
-?>  
+?>
+
 
 
 
@@ -298,7 +295,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         </div>
         <div class="grid-item">
             <label for="others">Others:</label>
-            <input type="file" id="others" name="others" accept=".pdf, .doc, .docx" required>
+            <input type="file" id="others" name="others" accept=".pdf, .doc, .docx" >
           </div>
         <div class="grid-item">
           <label for="start">Agreement Start Date:</label>
@@ -308,6 +305,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
           <label for="expire">Agreement Expire Date:</label>
           <input type="date" id="expire" name="expire" required>
         </div>
+        <div class="grid-item">
+        <label for="Status">Status</label>
+    <select id="Status" name="Status" onchange="toggleForm()">
+        <option value="none" selected disabled hidden>Choose Status</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+    </select>
+          </div>
+          <div class="grid-item">
+          <label for="Inactive">Disconnection Date:</label>
+          <input type="date" id="Inactive" name="Inactive" >
+        </div>
+      
     </div>
     
     <!-- ===================ACCOUNT FORM -==================----------- -->
@@ -331,13 +341,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             <input type="text" id="accountnumber" name="accountnumber" required>
           </div>
           <div class="grid-item">
-            
-    <label for="accounttype">Account Type</label>
-    <select id="accounttype" name="accounttype" onchange="toggleForm()">
-        <option value="none" selected disabled hidden>Choose Account Type</option>
-        <option value="current">Current</option>
-        <option value="saving">Saving</option>
-    </select>
+          <label for="accounttype">Account Type</label>
+          <div class="account-type-btn-group">
+          <input type="radio" id="current" name="accounttype" value="current" placeholder ="Current">
+          <label for="accounttype">Current</label>
+           <br>      
+          <input type="radio" id="saving" name="accounttype" value="saving" placeholder ="Saving" >
+          <label for="accounttype">Saving</label>
+          </div>
           </div>
           <div class="grid-item">
             <label for="cancel_cheque">Cancel Cheque</label> <!-- corrected name -->
@@ -352,19 +363,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     </div>
  
     <!-- ====================================KYC FORM -==================----------- -->
-    <div class="kyc-section">
+    <div class="account-section">
         <h3> KYC Details</h3>
         <div class="grid-container">
-        <div class="grid-item">
-            <label for="totalGst">GST:</label>
-      <select id="totalGst" name="totalGst" onchange="showGstInputs()">
-          <option value="0">Select Total GST Users</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <!-- Add more options as needed -->
-      </select>
-      <div id="gstInputsContainer"></div>
+    <div class="grid-item">
+            <label for="totalGst">Total GST</label>
+            <input type="number" id="totalGst" name="totalGst">
+          </div>
+          <div class="grid-item">
+            <label for="gst1">GST1</label>
+            <input type="file" id="gst1" name="gst1" accept=".pdf, .doc, .docx" >
+          </div>
+          <div class="grid-item">
+            <label for="gst2">GST2</label>
+            <input type="file" id="gst2" name="gst2" accept=".pdf, .doc, .docx" >
+          </div>
+          <div class="grid-item">
+            <label for="gst3">GST3</label>
+            <input type="file" id="gst3" name="gst3" accept=".pdf, .doc, .docx" >
           </div>
           <div class="grid-item">
             <label for="coi">COI</label>
@@ -380,40 +396,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
           </div>
           <div class="grid-item">
             <label for="other">Others:</label>
-            <input type="file" id="other" name="other" accept=".pdf, .doc, .docx" required>
+            <input type="file" id="other" name="other" accept=".pdf, .doc, .docx" >
           </div>
         </div>
     </div>
-    <!------=======================Script JAVE=============================--->
-
-    <script>
-
-
-        function showGstInputs() {
-            var totalGst = document.getElementById("totalGst").value;
-            var gstInputsContainer = document.getElementById("gstInputsContainer");
-        
-            // Clear existing inputs
-            gstInputsContainer.innerHTML = "";
-        
-            // Add GST input fields based on totalGst selection
-            for (var i = 1; i <= totalGst; i++) {
-                var label = document.createElement("label");
-                label.textContent = "GST " + i + ":";
-        
-                var input = document.createElement("input");
-                input.type = "file";
-                input.name = "gst_user_" + i;
-                input.accept = ".pdf, .doc, .docx"; // specify accepted file types
-                input.required = true;
-        
-                gstInputsContainer.appendChild(label);
-                gstInputsContainer.appendChild(input);
-                gstInputsContainer.appendChild(document.createElement("br"));
-            }
-        }
-        </script>
-  <!------=======================Script JAVE END=============================--->
 
 <!--------==================CONTACT Details=====================================-->    
 <div class="contact-section">
@@ -421,9 +407,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     <div class="grid-container">
     <div class="grid-item">
         <label for="ownerdesig">Owner:</label>
-        <input type="text" id="ownerdesig" name="ownerdesig" placeholder ="Designation" required>
-      </div>
-      <div class="grid-item">
         <input type="text" id="ownername" name="ownername" placeholder="Name" required>
       </div>
       <div class="grid-item">
@@ -435,9 +418,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 
       <div class="grid-item">
         <label for="accountdesig">Account:</label>
-        <input type="text" id="accountdesig" name="accountdesig" placeholder ="Designation" required>
-      </div>
-      <div class="grid-item">
         <input type="text" id="account_name" name="account_name" placeholder="Name" required>
       </div>
       <div class="grid-item">
@@ -448,9 +428,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
       </div>
       <div class="grid-item">
         <label for="fielddesig">Feild Team:</label>
-        <input type="text" id="fielddesig" name="fielddesig" placeholder ="Designation" required>
-      </div>
-      <div class="grid-item">
         <input type="text" id="fieldname" name="fieldname" placeholder="Name" required>
       </div>
       <div class="grid-item">
@@ -460,10 +437,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         <input type="text" id="fieldemail" name="fieldemail" placeholder="email" required>
       </div>
       <div class="grid-item">
-        <label for="desig">Owner:</label>
-        <input type="text" id="desig" name="desig" placeholder ="Designation" required>
-      </div>
-      <div class="grid-item">
+        <label for="desig">Others:</label>
         <input type="text" id="nam" name="nam" placeholder="Name" required>
       </div>
       <div class="grid-item">
@@ -472,13 +446,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
       <div class="grid-item">
         <input type="text" id="email" name="email" placeholder="email" required>
       </div>
-      
+
       <div class = "database">
       <a href="vendordata.php">Vendor Database</a>
       </div>
+     
       <div class="button-container">
         <button type="submit" name="submit">Submit</button>
-        
       </div>
     </form>
   </div>

@@ -2,10 +2,9 @@
 session_start();
 if (!isset($_SESSION['user'])) {
     header('Location: login.php');
-    exit(); // Add exit to stop further execution
+    exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,8 +23,8 @@ if (!isset($_SESSION['user'])) {
         <li class="dropdown">
           <a href="index.php">Master &#9662;</a>
           <div class="dropdown-content">
-            <a href="vendor.php">Vendor</a>
-            <a href="cust.php">Customer</a>
+            <a href="vendordata.php">Vendor</a>
+            <a href="data.php">Customer</a>
             <a href="#">State</a>
           </div>
         </li>
@@ -57,7 +56,8 @@ if (!isset($_SESSION['user'])) {
         <li class="dropdown">
           <a href="#">Tracker &#9662;</a>
           <div class="dropdown-content">
-            <a href="tracker1.php">Tracker 1 </a>
+          <a href="implement.php">New-Links</a>
+            <a href="tracker1.php">Tracker 1</a>
             <a href="#">Tracker 2</a>
             <a href="#">Tracker 3</a>
           </div>
@@ -65,15 +65,15 @@ if (!isset($_SESSION['user'])) {
         <li class="dropdown">
           <a href="#">Profile &#9662;</a>
           <div class="dropdown-content">
-          <a href="logout.php">Sign Out</a>
-          <a href="search.php">Search</a>
-        </div>
+            <a href="logout.php">Sign Out</a>
+            <a href="search.php">Search</a>
+          </div>
         </li>
       </ul>
     </nav>
   </header>
 
   
-
 </body>
 </html>
+

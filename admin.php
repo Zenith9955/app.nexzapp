@@ -5,17 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <style>
-        body {
-        font-family: Arial, sans-serif;
-        background-color: #f3f3f3;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    
+      
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f3f3;
+    background-image: url('css/bg.jpg'); /* Path to your image */
+    background-size: cover; /* Cover the entire page */
+    background-position: center; 
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
     .wrapper {
         display: flex;
         justify-content: center;

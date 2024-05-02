@@ -47,7 +47,7 @@ if(isset($_GET['file'])) {
 
 form {
   display: flex;
-  justify-content: center;
+  justify-content: ;
   margin-top: 100px;
 }
       
@@ -75,7 +75,7 @@ table th, table td {
 }
 
 table th {
-    background-color: #f2f2f2;
+    background-color: #4b4b4b;
 }
 
 table tr:nth-child(even) {
@@ -83,7 +83,7 @@ table tr:nth-child(even) {
 }
 
 table tr:hover {
-    background-color: #e6e6e6; /* Darker shade on hover for better feedback */
+    background-color: #ababab; /* Darker shade on hover for better feedback */
 }
 
 /* Styling for form elements */
@@ -121,7 +121,7 @@ a:hover {
 <!-----------------------=+===========CSS END=======================---------->
 
 </head>
-    <header>
+<header>
     <div class="logo">
       <img src="css/logo.jpg" alt="Logo">
     </div>
@@ -147,9 +147,11 @@ a:hover {
         <li class="dropdown">
           <a href="#">Feasibility &#9662;</a>
           <div class="dropdown-content">
-            <a href="#">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
+          <a href="darkfiberdata.php">Dark Fiber</a>
+            <a href="#">Internet</a>
+            <a href="#">Bandwidth</a>
+            <a href="#">Leased Line</a>
+            <a href="#">Infra</a>
           </div>
         </li>
         <li class="dropdown">
@@ -163,8 +165,8 @@ a:hover {
         <li class="dropdown">
           <a href="#">Tracker &#9662;</a>
           <div class="dropdown-content">
-          <a href="implement.php">New-Links</a>
-            <a href="tracker1.php">Tracker 1 </a>
+          <a href="linkdata.php">New-Links</a>
+            <a href="tracker1.php">Tracker 1</a>
             <a href="#">Tracker 2</a>
             <a href="#">Tracker 3</a>
           </div>
@@ -172,13 +174,14 @@ a:hover {
         <li class="dropdown">
           <a href="#">Profile &#9662;</a>
           <div class="dropdown-content">
-          <a href="logout.php">Sign Out</a>
-          <a href="search.php">Search</a>
-        </div>
+            <a href="logout.php">Sign Out</a>
+            <a href="search.php">Search</a>
+          </div>
         </li>
       </ul>
     </nav>
   </header>
+
     <body>
         <h2>Documents</h2>
         <form method="get">

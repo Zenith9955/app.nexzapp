@@ -40,22 +40,22 @@ if(isset($_GET['file'])) {
     <!DOCTYPE html>
     <html lang="en">
     <head>
+        <link rel="stylesheet" href="css/style.css">
         <meta charset="UTF-8">
         <title>File Download</title>
-        <link rel="stylesheet" href="css/style.css">
         <style>
 
 form {
   display: flex;
-  justify-content: none;
-  margin-top: 90px;
+  justify-content: ;
+  margin-top: 100px;
   padding: 10px;
 }
       
 
 h2{
         color:#4b4b4b;
-        text-align: center;
+        text-align: none;
         font-weight: bold;
       }
 
@@ -84,7 +84,7 @@ table tr:nth-child(even) {
 }
 
 table tr:hover {
-    background-color: #e6e6e6; /* Darker shade on hover for better feedback */
+    background-color: #ababab; /* Darker shade on hover for better feedback */
 }
 
 /* Styling for form elements */
@@ -121,8 +121,8 @@ a:hover {
     
 <!-----------------------=+===========CSS END=======================---------->
 
-    </head>
-    <header>
+</head>
+<header>
     <div class="logo">
       <img src="css/logo.jpg" alt="Logo">
     </div>
@@ -185,18 +185,19 @@ a:hover {
 
     <body>
         <h2>Documents</h2>
-        <<form method="get">
+        <form method="get">
             <label for="search"></label>
             <input type="text" id="search" name="search" placeholder = "Search">
             <button type="submit">Search</button>
         </form>
         <table>
             <tr>
-                <th>Vendor Name</th>
+                <th>Customer Name</th>
                 <th>Download Links</th>
             </tr>
+            <!-- Fetch fields from the customers table based on search -->
             <?php
-            $sql = "SELECT name, agreement, others, cancel_cheque, coi, pan, gst1, gst2, gst3, license, other FROM vendor"; 
+            $sql = "SELECT name, otdrdls FROM implement"; 
 
             // Check if search parameter is provided
             if(isset($_GET['search']) && !empty($_GET['search'])) {
@@ -210,21 +211,21 @@ a:hover {
                 $filesByCustomer = array();
                 while($row = mysqli_fetch_assoc($result)) {
                     // Group files by customer name
-                    $customerName = $row['name'];
-                    $filesByCustomer[$customerName] = array();
+                    $name = $row['name'];
+                    $filesByCustomer[$name] = array();
                     foreach ($row as $key => $value) {
                         if ($key !== 'name' && !empty($value)) {
                             $fileName = basename($value);
-                            $fileUrl = 'download.php?file=' . urlencode($fileName);
-                            $filesByCustomer[$customerName][$key] = '<a href="' . $fileUrl . '">Download ' . $key . '</a>';
+                            $fileUrl = 'linkdownload.php?file=' . urlencode($fileName);
+                            $filesByCustomer[$name][$key] = '<a href="' . $fileUrl . '">Download ' . $key . '</a>';
                         }
                     }
                 }
 
                 // Output the grouped files with download links
-                foreach ($filesByCustomer as $customerName => $files) {
+                foreach ($filesByCustomer as $name => $files) {
                     echo '<tr>';
-                    echo '<td>' . $customerName . '</td>';
+                    echo '<td>' . $name . '</td>';
                     echo '<td>' . implode(', ', $files) . '</td>';
                     echo '</tr>';
                 }

@@ -60,7 +60,7 @@ $connection->close();
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header>
+<header>
     <div class="logo">
       <img src="css/logo.jpg" alt="Logo">
     </div>
@@ -86,9 +86,11 @@ $connection->close();
         <li class="dropdown">
           <a href="#">Feasibility &#9662;</a>
           <div class="dropdown-content">
-            <a href="#">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
+          <a href="darkfiberdata.php">Dark Fiber</a>
+            <a href="#">Internet</a>
+            <a href="#">Bandwidth</a>
+            <a href="#">Leased Line</a>
+            <a href="#">Infra</a>
           </div>
         </li>
         <li class="dropdown">
@@ -102,8 +104,8 @@ $connection->close();
         <li class="dropdown">
           <a href="#">Tracker &#9662;</a>
           <div class="dropdown-content">
-            <a href="tracker1.php">Tracker 1 </a>
-            <a href="implement.php">New-Links</a>
+          <a href="linkdata.php">New-Links</a>
+            <a href="tracker1.php">Tracker 1</a>
             <a href="#">Tracker 2</a>
             <a href="#">Tracker 3</a>
           </div>
@@ -111,13 +113,14 @@ $connection->close();
         <li class="dropdown">
           <a href="#">Profile &#9662;</a>
           <div class="dropdown-content">
-          <a href="logout.php">Sign Out</a>
-          <a href="search.php">Search</a>
-        </div>
+            <a href="logout.php">Sign Out</a>
+            <a href="search.php">Search</a>
+          </div>
         </li>
       </ul>
     </nav>
   </header>
+
     <style>
           form {
           display: flex;

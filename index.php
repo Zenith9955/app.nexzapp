@@ -40,9 +40,11 @@ if (!isset($_SESSION['user'])) {
         <li class="dropdown">
           <a href="#">Feasibility &#9662;</a>
           <div class="dropdown-content">
-            <a href="#">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
+          <a href="darkfiberdata.php">Dark Fiber</a>
+            <a href="#">Internet</a>
+            <a href="#">Bandwidth</a>
+            <a href="#">Leased Line</a>
+            <a href="#">Infra</a>
           </div>
         </li>
         <li class="dropdown">
@@ -56,7 +58,7 @@ if (!isset($_SESSION['user'])) {
         <li class="dropdown">
           <a href="#">Tracker &#9662;</a>
           <div class="dropdown-content">
-          <a href="implement.php">New-Links</a>
+          <a href="linkdata.php">New-Links</a>
             <a href="tracker1.php">Tracker 1</a>
             <a href="#">Tracker 2</a>
             <a href="#">Tracker 3</a>

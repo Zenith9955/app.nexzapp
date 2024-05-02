@@ -145,9 +145,11 @@ form {
         <li class="dropdown">
           <a href="#">Feasibility &#9662;</a>
           <div class="dropdown-content">
-            <a href="#">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
+          <a href="darkfiberdata.php">Dark Fiber</a>
+            <a href="#">Internet</a>
+            <a href="#">Bandwidth</a>
+            <a href="#">Leased Line</a>
+            <a href="#">Infra</a>
           </div>
         </li>
         <li class="dropdown">
@@ -161,8 +163,8 @@ form {
         <li class="dropdown">
           <a href="#">Tracker &#9662;</a>
           <div class="dropdown-content">
-            <a href="implement.php">New-Links</a>
-            <a href="tracker1.php">Tracker 1 </a>
+          <a href="linkdata.php">New-Links</a>
+            <a href="tracker1.php">Tracker 1</a>
             <a href="#">Tracker 2</a>
             <a href="#">Tracker 3</a>
           </div>
@@ -170,9 +172,9 @@ form {
         <li class="dropdown">
           <a href="#">Profile &#9662;</a>
           <div class="dropdown-content">
-          <a href="logout.php">Sign Out</a>
-          <a href="search.php">Search</a>
-        </div>
+            <a href="logout.php">Sign Out</a>
+            <a href="search.php">Search</a>
+          </div>
         </li>
       </ul>
     </nav>
@@ -184,8 +186,8 @@ form {
   
   <div class="box"> <!-- Enclosing the content in a box -->
     <form action="" method="post" enctype="multipart/form-data">
-
-<?php
+   
+    <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     require_once "masterdatabase.php";
 
@@ -213,118 +215,128 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         }
     }
 
-    $customername = isset($_POST['customername']) ? sanitize_input($conn, $_POST['customername']) : '';
-    $feasibility = isset($_POST['feasibility']) ? sanitize_input($conn, $_POST['feasibility']) : '';
-    $status = isset($_POST['status']) ? sanitize_input($conn, $_POST['status']) : '';
-    $disconnection = isset($_POST['disconnection']) ? sanitize_input($conn, $_POST['disconnection']) : '';
-    $podate = isset($_POST['podate']) ? sanitize_input($conn, $_POST['podate']) : '';
-    $ponumber = isset($_POST['ponumber']) ? sanitize_input($conn, $_POST['ponumber']) : '';
-    $expire = isset($_POST['expire']) ? sanitize_input($conn, $_POST['expire']) : '';
-    $contactname = isset($_POST['contactname']) ? sanitize_input($conn, $_POST['contactname']) : '';
-    $contactnub = isset($_POST['contactnub']) ? sanitize_input($conn, $_POST['contactnub']) : '';
-    $contactmail = isset($_POST['contactmail']) ? sanitize_input($conn, $_POST['contactmail']) : '';
-    $fibertype = isset($_POST['fibertype']) ? sanitize_input($conn, $_POST['fibertype']) : '';
-    $endA = isset($_POST['endA']) ? sanitize_input($conn, $_POST['endA']) : '';
-    $endAlatlong = isset($_POST['endAlatlong']) ? sanitize_input($conn, $_POST['endAlatlong']) : '';
-    $endB = isset($_POST['endB']) ? sanitize_input($conn, $_POST['endB']) : '';
-    $endBlatlong = isset($_POST['endBlatlong']) ? sanitize_input($conn, $_POST['endBlatlong']) : '';
-    $podistance = isset($_POST['podistance']) ? sanitize_input($conn, $_POST['podistance']) : '';
-    $vendorname = isset($_POST['vendorname']) ? sanitize_input($conn, $_POST['vendorname']) : '';
-    $partnername = isset($_POST['partnername']) ? sanitize_input($conn, $_POST['partnername']) : '';
-    $partnernumber = isset($_POST['partnernumber']) ? sanitize_input($conn, $_POST['partnernumber']) : '';
-    $partnermail = isset($_POST['partnermail']) ? sanitize_input($conn, $_POST['partnermail']) : '';
-    $handoverto = isset($_POST['handoverto']) ? sanitize_input($conn, $_POST['handoverto']) : '';
-    $handoverby = isset($_POST['handoverby']) ? sanitize_input($conn, $_POST['handoverby']) : '';
-    $deliverystatus = isset($_POST['deliverystatus']) ? sanitize_input($conn, $_POST['deliverystatus']) : '';
-    $projectend = isset($_POST['projectend']) ? sanitize_input($conn, $_POST['projectend']) : '';
-    $ageingdays = isset($_POST['ageingdays']) ? sanitize_input($conn, $_POST['ageingdays']) : '';
-    $acceptancedate = isset($_POST['acceptancedate']) ? sanitize_input($conn, $_POST['acceptancedate']) : '';
-    $remarks = isset($_POST['remarks']) ? sanitize_input($conn, $_POST['remarks']) : '';
+    // Get values from POST data and sanitize
+    $name = sanitize_input($conn, $_POST['name']);
+    $status = sanitize_input($conn, $_POST['status']);
+    $disconnection = sanitize_input($conn, $_POST['disconnection']);
+    $feasibilityID = sanitize_input($conn, $_POST['feasibilityID']);
+    $po = sanitize_input($conn, $_POST['po']);
+    $podate = sanitize_input($conn, $_POST['podate']);
+    $expire = sanitize_input($conn, $_POST['expire']);
+    $podis = sanitize_input($conn, $_POST['podis']);
+    $contactname = sanitize_input($conn, $_POST['contactname']);
+    $contactnub = sanitize_input($conn, $_POST['contactnub']);
+    $contactmail = sanitize_input($conn, $_POST['contactmail']);
+    $fibertype = sanitize_input($conn, $_POST['fibertype']);
+    $endA = sanitize_input($conn, $_POST['endA']);
+    $endAlatlong = sanitize_input($conn, $_POST['endAlatlong']);
+    $endB = sanitize_input($conn, $_POST['endB']);
+    $endBlatlong = sanitize_input($conn, $_POST['endBlatlong']);
+    $vendorname = sanitize_input($conn, $_POST['vendorname']);
+    $partnername = sanitize_input($conn, $_POST['partnername']);
+    $partnernumber = sanitize_input($conn, $_POST['partnernumber']);
+    $partnermail = sanitize_input($conn, $_POST['partnermail']); 
+    $otdr = sanitize_input($conn, $_POST['otdr']);
+    $overall = sanitize_input($conn, $_POST['overall']);
+    $handoverto = sanitize_input($conn, $_POST['handoverto']);
+    $handoverby = sanitize_input($conn, $_POST['handoverby']);
+    $handover = sanitize_input($conn, $_POST['handover']);
+    $recurring = sanitize_input($conn, $_POST['recurring']);
+    $deliverystatus = sanitize_input($conn, $_POST['deliverystatus']);
+    $projectend = sanitize_input($conn, $_POST['projectend']);
+    $ageingdays = sanitize_input($conn, $_POST['ageingdays']);
+    $acceptancedate = sanitize_input($conn, $_POST['acceptancedate']);
+    $remarks = sanitize_input($conn, $_POST['remarks']);
 
-
-
-
-    // file Uploads
+    // File uploads
     $otdrdlsPath = isset($_FILES['otdrdls']) ? uploadFile($_FILES['otdrdls']) : '';
 
-    // Prepare SQL statement
-    $sql = "INSERT INTO Implementation (customername, feasibility, status, disconnection, podate, ponumber, expire, contactname, contactnub, contactmail, fibertype, endA, endAlatlong, endB, endBlatlong, podistance, vendorname, partnername, partnernumber, partnermail, otdrdls, handoverto, handoverby, deliverystatus, projectend, ageingdays, acceptancedate, remarks)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // SQL DATABASE
+    $sql = "INSERT INTO implement (name, status, disconnection, feasibilityID, po, podate, expire, podis, contactname, contactnub, contactmail, fibertype, endA, endAlatlong, endB, endBlatlong, vendorname, partnername, partnernumber, partnermail, otdr, overall, handoverto, handoverby, handover, recurring, deliverystatus, projectend, ageingdays, acceptancedate, remarks, otdrdls)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_stmt_init($conn);
-
+   
     if (mysqli_stmt_prepare($stmt, $sql)) {
-        // Bind parameters and execute statement
-        mysqli_stmt_bind_param($stmt, "ssssssssssssssssssssssssssss", 
-        $customername, $feasibility, $status, $disconnection, $podate, $ponumber,  $expire, $contactname, $contactnub, $contactmail, $fibertype, $endA, $endAlatlong, $endB, $endBlatlong, $podistance, $vendorname, $partnername, $partnernumber, $partnermail, $otdrdlsPath, $handoverto, $handoverby, $deliverystatus, $projectend, $ageingdays, $acceptancedate, $remarks);
-
+        mysqli_stmt_bind_param($stmt, "ssssssssssssssssssssssssssssssss",
+            $name, $status, $disconnection, $feasibilityID, $po, $podate, $expire, $podis, $contactname, $contactnub, $contactmail, $fibertype, $endA, $endAlatlong, $endB, $endBlatlong, $vendorname, $partnername, $partnernumber, $partnermail, $otdr, $overall, $handoverto, $handoverby, $handover, $recurring, $deliverystatus, $projectend, $ageingdays, $acceptancedate, $remarks, $otdrdlsPath);
+        
         mysqli_stmt_execute($stmt);
         echo "<div class='alert alert-success'>Upload successful</div>";
     } else {
         echo "<div class='alert alert-danger'>Something went wrong: " . mysqli_error($conn) . "</div>";
     }
+  
 }
 ?>
   <!---------------------===========DATABASE PHP END===================--------------->
 
       <h1>Implementation Form</h1>
 
+      
       <div class="grid-container">
-            <div class="grid-item">
-                <label for="customername">Customer Name:</label>
-                <select id="customername" name="customername" required>
-                    <option value="" selected disabled>Select Customers Name</option>
-                    <?php
-                    // Establish a database connection (you'll need your actual database credentials here)
-                    require_once "masterdatabase.php";
-                    // Check connection
-                    if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
-                    }
+      <div class="grid-item">
+    <label for="feasibilityID">Feasibility ID:</label>
+    <select id="feasibilityID" name="feasibilityID" required onchange="fetchCustomerName()">
+        <option value="" selected disabled>Select Feasibility ID</option>
+        <?php
+        // Establish a database connection (you'll need your actual database credentials here)
+        require_once "masterdatabase.php";
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
 
-                    // SQL query to get customer names
-                    $sql = "SELECT name FROM customers";
-                    $result = $conn->query($sql);
+        // SQL query to get feasibility IDs
+        $sql = "SELECT feasibilityID FROM darkfiber";
+        $result = $conn->query($sql);
 
-                    // Loop through results and create options for the dropdown
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo '<option value="' . $row["name"] . '">' . $row["name"] . '</option>';
-                        }
-                    }
+        // Loop through results and create options for the dropdown
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo '<option value="' . $row["feasibilityID"] . '">' . $row["feasibilityID"] . '</option>';
+            }
+        }
 
-                    // Close customer name query
-                    $result->close();
-                    ?>
-                </select>
+        // Close feasibility ID query
+        $result->close();
+        ?>
+    </select>
+</div>
+
+<div class="grid-item">
+    <label for="name">Customer Name:</label>
+    <input type="text" id="name" name="name" required readonly>
+</div>
+
+<script>
+    function fetchCustomerName() {
+        var feasibilityID = document.getElementById("feasibilityID").value;
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("name").value = this.responseText;
+            }
+        };
+        xhr.open("GET", "fetch_customer_name.php?feasibilityID=" + feasibilityID, true);
+        xhr.send();
+    }
+</script>
+        <div class="grid-item">
+                <label for="po">Po Number</label>
+                <input type="text" id="po" name="po" required>
             </div>
             <div class="grid-item">
-                <label for="status">Status</label>
-                <select id="status" name="status" required>
-                    <option value="none" selected disabled hidden>Choose Status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
+                <label for="podate">Po Date:</label>
+                <input type="date" id="podate" name="podate" required>
             </div>
-            <div class="grid-item">
-                <label for="disconnection">Disconnection Date</label>
-                <input type="date" id="disconnection" name="disconnection">
-            </div>
-        <div class="grid-item">
-          <label for="feasibility">Feasibility ID:</label>
-          <input type="text" id="feasibility" name="feasibility" required>
-        </div>
-        <div class="grid-item">
-          <label for="ponumber">Po Number:</label>
-          <input type="text" id="ponumber" name="ponumber" required>
-        </div>
-        <div class="grid-item">
-          <label for="podate">PO Date:</label>
-          <input type="date" id="podate" name="podate" required>
-        </div>
         <div class="grid-item">
             <label for="expire">Po Expire Date:</label>
             <input type="date" id="expire" name="expire" >
           </div>
+          <div class="grid-item">
+          <label for="podis">Po Distance(In Km):</label>
+          <input type="text" id="podis" name="podis" required>
+      </div>
         <div class="grid-item">
           <label for="contactname">Contact Name:</label>
           <input type="text" id="contactname" name="contactname" required>
@@ -334,37 +346,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
           <input type="text" id="contactnub" name="contactnub" required>
         </div>
         <div class="grid-item">
-          <label for="Contactmail">Contact Mail:</label>
-          <input type="text" id="Contactmail" name="contactmail" required >
+          <label for="contactmail">Contact Mail:</label>
+          <input type="text" id="contactmail" name="contactmail" required >
         </div>
         <div class="grid-item">
-        <label for="fibertype">Fiber Type</label>
-    <select id="fibertype" name="fibertype" onchange="toggleForm()">
-        <option value="none" selected disabled hidden>Choose fiber type</option>
-        <option value="Single">Single</option>
-        <option value="Pair">Pair</option>
-    </select>
-          </div>
+                <label for="fibertype">Fiber Type</label>
+                <select id="fibertype" name="fibertype" required>
+                    <option value="none" selected disabled hidden>Choose Fiber Type</option>
+                    <option value="single">Single Core</option>
+                    <option value="pair">Pair</option>
+                </select>
+            </div>
           <div class="grid-item">
-          <label for="endA">End A:</label>
-          <input type="text" id="endA" name="endA" required>
-        </div>
+                <label for="endA">End A:</label>
+                <input type="text" id="endA" name="endA" required>
+            </div>
         <div class="grid-item">
           <label for="endAlatlong">End A Latlong:</label>
          <input type="text" id="endAlatlong" name="endAlatlong" required>
         </div>
         <div class="grid-item">
-          <label for="endB">End B:</label>
-          <input type="text" id="endB" name="endB" required>
-        </div>
+                <label for="endB">End B:</label>
+                <input type="text" id="endB" name="endB" required>
+            </div>
         <div class="grid-item">
           <label for="endBlatlong">End B Latlong:</label>
           <input type="text" id="endBlatlong" name="endBlatlong" required>
         </div>
-        <div class="grid-item">
-          <label for="podistance">Po Distance:</label>
-          <input type="text" id="podistance" name="podistance" required>
-        </div>
+       
             <div class="grid-item">
                 <label for="vendorname">Partner:</label>
                 <select id="vendorname" name="vendorname" required>
@@ -410,9 +419,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
           <input type="file" id="otdrdls" name="otdrdls" accept=".pdf, .doc, .docx" >
         </div>
         <div class="grid-item">
-          <label for="otdr">OTDR Length:</label>
-          <input type="text" id="otdr" name="otdr" required >
-        </div>
+                <label for="otdr">OTDR Length:</label>
+                <input type="text" id="otdr" name="otdr" required>
+            </div>
+        <div class="grid-item">
+                <label for="overall">Overall Losses:</label>
+                <input type="text" id="overall" name="overall" required>
+            </div>
         <div class="grid-item">
           <label for="handoverto">Handover To:</label>
           <input type="text" id="handoverto" name="handoverto" required>
@@ -421,6 +434,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
           <label for="handoverby">Handover By:</label>
           <input type="text" id="handoverby" name="handoverby" required>
         </div>
+            <div class="grid-item">
+                <label for="handover">Handover Date:</label>
+                <input type="date" id="handover" name="handover" required>
+            </div>
+            <div class="grid-item">
+                <label for="recurring">Recurring Charges:</label>
+                <input type="text" id="recurring" name="recurring" required>
+            </div>
         <div class="grid-item">
   <label for="deliverystatus">Delivery Status</label>
   <select id="deliverystatus" name="deliverystatus" onchange="toggleForm()">
@@ -467,14 +488,29 @@ function toggleForm() {
 }
 </script>
 
-        <div class="grid-item">
-          <label for="remarks">Remarks:</label>
-          <input type="text" id="remarks" name="remarks" >
-        </div>
+<div class="grid-item">
+                <label for="status">Status</label>
+                <select id="status" name="status" required>
+                    <option value="none" selected disabled hidden>Choose Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+            <div class="grid-item">
+                <label for="disconnection">Disconnection Date</label>
+                <input type="date" id="disconnection" name="disconnection">
+            </div>
+
+            <div class="grid-item">
+                <label for="remarks">Remarks:</label>
+                <input type="text" id="remarks" name="remarks" required>
+            </div>
         <div class="button-container">
         <button type="submit" name="submit">Submit</button>
       </div>
     </form>
   </div>
+  
+
 </body>
 </html>

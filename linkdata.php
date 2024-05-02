@@ -4,49 +4,15 @@ if (!isset($_SESSION['user'])) {
     header('Location: login.php');
     exit;
 }
-
-// Database connection
-$host = 'localhost';  // Adjust according to your database host
-$username = 'root';   // Your database username
-$password = '';       // Your database password
-$database = 'master';  // Your database name
-$conn = new mysqli($host, $username, $password, $database);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Handle delete request
-if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
-    // Assuming you have a function to safely fetch and verify the file names before deleting
-    $stmt = $conn->prepare("SELECT agreement, others FROM customers WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($row = $result->fetch_assoc()) {
-        @unlink('uploads/' . basename($row['agreement']));
-        @unlink('uploads/' . basename($row['others']));
-    }
-    $stmt->close();
-
-    // Delete the record
-    $stmt = $conn->prepare("DELETE FROM customers WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $stmt->close();
-    header("Location: data.php"); // Prevent form resubmission pattern
-    exit;
-}
-
+require_once "masterdatabase.php";
 // Search functionality
 $search = $_GET['search'] ?? '';
 if ($search) {
-    $stmt = $conn->prepare("SELECT * FROM customers WHERE name LIKE ?");
+    $stmt = $conn->prepare("SELECT * FROM implement WHERE name LIKE ?");
     $searchTerm = "%{$search}%";
     $stmt->bind_param("s", $searchTerm);
 } else {
-    $stmt = $conn->prepare("SELECT * FROM customers");
+    $stmt = $conn->prepare("SELECT * FROM implement");
 }
 
 $stmt->execute();
@@ -57,11 +23,11 @@ if ($conn->connect_error) {
 }
 
 // Fetch active vendors
-$sqlActive = "SELECT name FROM customers WHERE status = 'Active'";
+$sqlActive = "SELECT name FROM implement WHERE status = 'active'";
 $resultActive = $conn->query($sqlActive);
 
 // Fetch inactive vendors
-$sqlInactive = "SELECT name, Inactive FROM customers WHERE status = 'Inactive'";
+$sqlInactive = "SELECT name FROM implement WHERE status = 'inactive'";
 $resultInactive = $conn->query($sqlInactive);
 ?>
 
@@ -79,12 +45,11 @@ body {
      }
 
  main {
-     max-width: 100%;
+     max-width: 150%;
      margin: 120px auto;
      background-color: #fff;
      padding: 10px;
      border-radius: 8px;
-     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
  }
 
  h1 {
@@ -101,16 +66,17 @@ body {
 }
 
 
- table {
-     width: 100%;
-     margin: 3px auto;
-     border-collapse: collapse;
-     overflow: hidden; /* Ensuring borders are consistent */
-     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-     border-radius: 2px; /* Adding border radius for a softer look */
-     border: 5px solid #ccc; /* Adding a subtle shadow for depth */
-     font-size: 15px;
- }
+table {
+    width: 100%;
+    max-width: 100%; /* Set maximum width to 100% of the parent container */
+    margin: 3px auto;
+    border-collapse: collapse;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    border: 5px solid #ccc;
+    font-size: 15px;
+}
 
  table th, table td {
      padding: 2px;
@@ -135,24 +101,23 @@ body {
  /* Styling for form elements */
  input[type="text"] {
      padding: 15px; /* Making input and button sizes consistent */
-     font-size: 12px;
+     font-size: 15px;
      border-radius: 2px; /* Adding border radius for a softer look */
      border: 1px solid #ccc; /* Adding a light border for input fields */
  }
 
  button {
-     padding: 10px 10px;
-     cursor: pointer;
-     background-color: #007bff; /* Adding a primary color for buttons */
-     color: #fff; /* Making button text white for better contrast */
-     border: none;
-     transition: background-color 0.3s ease; /* Adding smooth transition on hover */
- }
+            padding: 10px 10px;
+            cursor: pointer;
+            background-color: #007bff; /* Adding a primary color for buttons */
+            color: #fff; /* Making button text white for better contrast */
+            border: none;
+            transition: background-color 0.3s ease; /* Adding smooth transition on hover */
+        }
 
- button:hover {
-     background-color: #0056b3; /* Darkening button color on hover */
- }
- 
+        button:hover {
+            background-color: #0056b3; /* Darkening button color on hover */
+        }
 
  /* Styling for links */
  a {
@@ -279,11 +244,11 @@ $totalInactive = ($resultInactive->num_rows > 0) ? $resultInactive->num_rows : 0
     <div class="grid-container">
     <div class="Combined-Vendors">
         <div class="vendor-box active">
-            <div class="status">ACTIVE</div>
+            <div class="status">Active</div>
             <div class="count"><?= $totalActive ?></div>
         </div>
         <div class="vendor-box inactive">
-            <div class="status">INACTIVE</div>
+            <div class="status">Inactive</div>
             <div class="count"><?= $totalInactive ?></div>
         </div>
     </div>
@@ -294,66 +259,76 @@ $totalInactive = ($resultInactive->num_rows > 0) ? $resultInactive->num_rows : 0
     <button type="submit">Search</button>
 </form>
 <div class="button-container">
-    <a href="cust.php"><button>Add New</button></a>
+    <a href="implement.php"><button>Add New</button></a>
 </div>
 
 <table border="1">
     <tr>
-        <th>Customer</th>
-        <th>Address</th>
-        <th> Download Documents</th>
-        <th>Start Date</th>
-        <th>Expire Date</th>
+        <th>FeasibilityIDs</th>
+        <th>Name</th>
         <th>Status</th>
-        <th>Inactive Date</th>
-        <th>Owner</th>
-        <th>Account</th>
-        <th>Field Team</th>
-        <th>Others</th>
-        <th>Actions</th>
+        <th>Disconnection</th>
+        <th>Po number</th>
+        <th>Po Date</th>
+        <th>Expire</th>
+        <th>Contact name</th>
+        <th>Contact Number</th>
+        <th>Contact mail</th>
+        <th>Fiber Type</th>
+        <th>End A</th>
+        <th>End A Latlongs</th>
+        <th>End B</th>
+        <th>End B Latlongs</th>
+        <th>Partner Name</th>
+        <th>Partner Number</th>
+        <th>Partner mail</th>
+        <th>OtdrDls</th>
+        <th>Otdr</th>
+        <th>Overall</th>
+        <th>handover to</th>
+        <th>handover by</th>
+        <th>handover date</th>
+        <th>Recurring</th>
+        <th>project end</th>
+        <th>ageing Days</th>
+        <th>acceptance Date</th>
+        <th>Remarks</th>
+
+
+
     </tr>
     <?php while ($row = $result->fetch_assoc()): ?>
         <tr>
+            <td><?= htmlspecialchars($row['feasibilityID']) ?></td>
             <td><?= htmlspecialchars($row['name']) ?></td>
-            <td><?= htmlspecialchars($row['address']) ?></td>
-
-            <td>
-            <a href="download.php?id=<?= $row['id'] ?>">Download</a>
-            </td>
-
-            <td><?= htmlspecialchars($row['start']) ?></td>
+            <td><?= htmlspecialchars($row['status']) ?></td>
+            <td><?= htmlspecialchars($row['disconnection']) ?></td>
+            <td><?= htmlspecialchars($row['po']) ?></td>
+            <td><?= htmlspecialchars($row['podate']) ?></td>
             <td><?= htmlspecialchars($row['expire']) ?></td>
-            <td><?= htmlspecialchars($row['Status']) ?></td>
-            <td><?= htmlspecialchars($row['Inactive']) ?></td>
-          
-            <td>
-             <?= htmlspecialchars($row['ownerdesig']) ?><br>
-             <?= htmlspecialchars($row['ownername']) ?><br>
-             <?= htmlspecialchars($row['owneremail']) ?><br>
-             <?= htmlspecialchars($row['ownercontact']) ?><br>
-            </td>
-            <td>
-             <?= htmlspecialchars($row['accountdesig']) ?><br>
-             <?= htmlspecialchars($row['accountname']) ?><br>
-             <?= htmlspecialchars($row['accountemail']) ?><br>
-             <?= htmlspecialchars($row['accountcontact']) ?><br>
-            </td>
-            <td>
-             <?= htmlspecialchars($row['fielddesig']) ?><br>
-             <?= htmlspecialchars($row['fieldname']) ?><br>
-             <?= htmlspecialchars($row['fieldemail']) ?><br>
-             <?= htmlspecialchars($row['fieldcontact']) ?><br>
-            </td>
-            <td>
-             <?= htmlspecialchars($row['desig']) ?><br>
-             <?= htmlspecialchars($row['name']) ?><br>
-             <?= htmlspecialchars($row['email']) ?><br>
-             <?= htmlspecialchars($row['contact']) ?><br>
-            </td>
-            
-                <td>
-                <a href="?delete=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
-            </td>
+            <td> <?= htmlspecialchars($row['contactname']) ?></td>
+            <td> <?= htmlspecialchars($row['contactnub']) ?></td>
+            <td><?= htmlspecialchars($row['Contactmail']) ?></td>
+            <td><?= htmlspecialchars($row['fibertype']) ?></td>
+            <td><?= htmlspecialchars($row['endA']) ?></td>
+            <td><?= htmlspecialchars($row['endAlatlong']) ?></td>
+            <td><?= htmlspecialchars($row['endB']) ?></td>
+            <td><?= htmlspecialchars($row['endBlatlong']) ?></td>
+              <td><?= htmlspecialchars($row['partnername']) ?></td>
+              <td><?= htmlspecialchars($row['partnernumber']) ?></td>
+             <td> <?= htmlspecialchars($row['partnermail']) ?></td>
+             <td><a href="linkdownload.php?id=<?= $row['id'] ?>">Download</a></td>
+              <td><?= htmlspecialchars($row['otdr']) ?></td>
+              <td><?= htmlspecialchars($row['overall']) ?></td>
+              <td><?= htmlspecialchars($row['handoverto']) ?></td>
+              <td><?= htmlspecialchars($row['handoverby']) ?></td>
+              <td><?= htmlspecialchars($row['handover']) ?></td>
+              <td><?= htmlspecialchars($row['recurring']) ?></td>
+              <td><?= htmlspecialchars($row['projectend']) ?></td>
+              <td><?= htmlspecialchars($row['ageingdays']) ?></td>
+              <td><?= htmlspecialchars($row['acceptancedate']) ?></td>
+              <td><?= htmlspecialchars($row['remarks']) ?></td>
+                
         </tr>
     <?php endwhile; ?>
 </table>

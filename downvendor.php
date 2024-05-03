@@ -42,8 +42,128 @@ if(isset($_GET['file'])) {
     <head>
         <meta charset="UTF-8">
         <title>File Download</title>
-        <link rel="stylesheet" href="css/style.css">
         <style>
+          header {
+background-color: #ffffff;
+color: #333; /* Dark gray */
+padding: 10px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+width: 100%;
+position: fixed;
+top: 0;
+z-index: 1000; /* Ensure header is above other content */
+transition: top 0.3s; /* Smooth transition when scrolling */
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow */
+}
+
+.logo img {
+height: 90px; /* Adjusted logo size */
+}
+
+/* Main content padding to prevent content from being hidden behind fixed header */
+main {
+padding-top: 90px; /* Adjust to match header height */
+
+}
+
+/* Navigation styles */
+nav ul {
+list-style: none;
+padding: 0;
+margin: 0;
+}
+
+nav ul li {
+display: inline-block;
+}
+
+nav ul li a {
+color: #333; /* Dark gray */
+text-decoration: none;
+padding: 15px 25px; /* Reduced padding */
+display: block;
+transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+nav ul li a:hover {
+background-color: #e0e0e0; /* Lighter gray on hover */
+}
+
+/* Dropdown styles */
+.dropdown:hover .dropdown-content {
+display: block;
+}
+
+.dropdown-content {
+display: none;
+position: absolute;
+background-color: #f9f9f9; /* Light gray */
+min-width: 200px;
+z-index: 1;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+/* 3D Scroll Effect */
+transform: translateZ(0);
+perspective: 1000px;
+overflow-y: auto;
+max-height: 200px; /* Adjust as needed */
+}
+
+.dropdown-content a {
+color: #333; /* Dark gray */
+padding: 12px 16px;
+text-decoration: none;
+display: block;
+}
+
+.dropdown-content a:hover {
+background-color: #e0e0e0; /* Lighter gray on hover */
+}
+
+.dropdown {
+position: relative;
+display: inline-block;
+}
+
+.dropdown button {
+background-color: #ababab; /* Green background */
+color: white; /* White text color */
+border: none; /* No border */
+padding: 5px 10px; /* Padding */
+text-align: center; /* Center text */
+text-decoration: none; /* No underline */
+display: inline-block;
+font-size: 14px; /* Font size */
+cursor: pointer; /* Cursor on hover */
+border-radius: 4px; /* Rounded corners */
+}
+
+.dropdown button:hover {
+background-color: #333; /* Darker green background on hover */
+}
+
+/* CSS for the Sign Out link */
+a.signout-link {
+color: #333; /* Dark gray text color */
+text-decoration: none; /* Remove underline */
+padding: 10px 20px; /* Add padding */
+border: 1px solid #333; /* Add border */
+border-radius: 4px; /* Add rounded corners */
+background-color: #fff; /* White background */
+}
+
+a.signout-link:hover {
+background-color: #e0e0e0; /* Light gray background on hover */
+color: #000; /* Darken text color on hover */
+}
+
+/* Add a class for when the header is scrolled */
+header.scrolled {
+top: -90px; /* Negative header height to hide */
+}
+
+
 
 form {
   display: flex;

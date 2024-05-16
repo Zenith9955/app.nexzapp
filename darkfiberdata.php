@@ -272,6 +272,9 @@ top: -90px; /* Negative header height to hide */
     font-weight: bold;
     font-size: 30px;
 }
+.multiid{
+    margin-top: 50px;
+}
 
 
     </style>
@@ -321,7 +324,8 @@ top: -90px; /* Negative header height to hide */
         <li class="dropdown">
           <a href="#">Tracker &#9662;</a>
           <div class="dropdown-content">
-          <a href="linkdata.php">New-Links</a>
+          <a href="projectdata.php">Project Tracker</a>
+          <a href="linkdata.php">Implement Tracker</a>
             <a href="tracker1.php">Tracker 1</a>
             <a href="#">Tracker 2</a>
             <a href="#">Tracker 3</a>
@@ -387,7 +391,7 @@ $result_yes_postatus_count->free_result();
 </form>
 
 <div class="button-container">
-    <a href="darkfiber.php"><button>Add New</button></a>
+    <a href="Darkfiber.php"><button>Add New</button></a>
 </div>
 
 <table>
@@ -403,12 +407,34 @@ $result_yes_postatus_count->free_result();
         <th>End-A Latlong</th>
         <th>End-B</th>
         <th>End-B Latlong</th>
+        <th>Po Status</th>
+        <th>Po Number</th>
+        <th>Partner</th>
         <th>Partner Name</th>
         <th>Partner Number</th>
         <th>Partner Email</th>
         <th>Status</th>
-        <th>Po Status</th>
-        <th>Po Number</th>
+        <th>distance</th>
+        <th>Partner Name</th>
+        <th>Partner Number</th>
+        <th>Partner Email</th>
+        <th>Status</th>
+        <th>distance</th>
+        <th>Partner Name</th>
+        <th>Partner Number</th>
+        <th>Partner Email</th>
+        <th>Status</th>
+        <th>distance</th>
+        <th>Partner Name</th>
+        <th>Partner Number</th>
+        <th>Partner Email</th>
+        <th>Status</th>
+        <th>distance</th>
+        <th>Partner Name</th>
+        <th>Partner Number</th>
+        <th>Partner Email</th>
+        <th>Status</th>
+        <th>distance</th>
     </tr>
 <?php
 // Include database connection
@@ -449,13 +475,36 @@ if ($result->num_rows > 0) {
         echo "<td>".$row["endAlatlong"]."</td>";
         echo "<td>".$row["endB"]."</td>";
         echo "<td>".$row["endBlatlong"]."</td>";
-        echo "<td>".$row["partnername"]."</td>";
-        echo "<td>".$row["partnernumber"]."</td>";
-        echo "<td>".$row["partnermail"]."</td>";
-        echo "<td>".$row["Status"]."</td>";
         echo "<td>".$row["postatus"]."</td>";
         echo "<td>".$row["po"]."</td>";
+        echo "<td>".$row["partner"]."</td>";
+        echo "<td>".$row["partnername1"]."</td>";
+        echo "<td>".$row["partnernumber1"]."</td>";
+        echo "<td>".$row["partnermail1"]."</td>";
+        echo "<td>".$row["Status"]."</td>";
+        echo "<td>".$row["distance"]."</td>";
+        echo "<td>".$row["partnername2"]."</td>";
+        echo "<td>".$row["partnernumber2"]."</td>";
+        echo "<td>".$row["partnermail2"]."</td>";
+        echo "<td>".$row["Status2"]."</td>";
+        echo "<td>".$row["distance2"]."</td>";
+        echo "<td>".$row["partnername3"]."</td>";
+        echo "<td>".$row["partnernumber3"]."</td>";
+        echo "<td>".$row["partnermail3"]."</td>";
+        echo "<td>".$row["Status3"]."</td>";
+        echo "<td>".$row["distance3"]."</td>";
+        echo "<td>".$row["partnername4"]."</td>";
+        echo "<td>".$row["partnernumber4"]."</td>";
+        echo "<td>".$row["Status4"]."</td>";
+        echo "<td>".$row["distance4"]."</td>";
+        echo "<td>".$row["partnermail5"]."</td>";
+        echo "<td>".$row["partnername5"]."</td>";
+        echo "<td>".$row["partnernumber5"]."</td>";
+        echo "<td>".$row["partnermail5"]."</td>"; 
+        echo "<td>".$row["Status5"]."</td>";
+        echo "<td>".$row["distance5"]."</td>";
         echo "</tr>";
+        
     }
 } else {
     echo "<tr><td colspan='17'>No results found</td></tr>";
@@ -465,7 +514,6 @@ if ($result->num_rows > 0) {
 if(isset($stmt)) $stmt->close();
 
 // Close connection
-$conn->close();
 ?>
 </table>
 </main>

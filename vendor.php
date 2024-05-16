@@ -294,7 +294,8 @@ form {
         <li class="dropdown">
           <a href="#">Tracker &#9662;</a>
           <div class="dropdown-content">
-          <a href="linkdata.php">New-Links</a>
+          <a href="projectdata.php">Project Tracker</a>
+          <a href="linkdata.php">Implement Tracker</a>
             <a href="tracker1.php">Tracker 1</a>
             <a href="#">Tracker 2</a>
             <a href="#">Tracker 3</a>
@@ -439,18 +440,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
           <input type="date" id="expire" name="expire" required>
         </div>
         <div class="grid-item">
-        <label for="Status">Status</label>
-    <select id="Status" name="Status" onchange="toggleForm()">
-        <option value="none" selected disabled hidden>Choose Status</option>
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-    </select>
-          </div>
-          <div class="grid-item">
-          <label for="Inactive">Disconnection Date:</label>
-          <input type="date" id="Inactive" name="Inactive" >
-        </div>
-      
+  <label for="Status">Status</label>
+  <select id="Status" name="Status" onchange="toggleForm()">
+    <option value="none" selected disabled hidden>Choose Status</option>
+    <option value="active">Active</option>
+    <option value="inactive">Inactive</option>
+  </select>
+</div>
+
+<div class="grid-item" id="disconnectionDateContainer" style="display: none;">
+  <label for="Inactive">Disconnection Date:</label>
+  <input type="date" id="Inactive" name="Inactive">
+</div>
+
+<script>
+  function toggleForm() {
+    var status = document.getElementById("Status").value;
+    var disconnectionDateContainer = document.getElementById("disconnectionDateContainer");
+
+    disconnectionDateContainer.style.display = (status === "inactive") ? "block" : "none";
+  }
+</script>
     </div>
     
     <!-- ===================ACCOUNT FORM -==================----------- -->
@@ -539,7 +549,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     <h3> Contact Details</h3>
     <div class="grid-container">
     <div class="grid-item">
-        <label for="ownerdesig">Owner:</label>
+        <label for="ownerdesig">Director:</label>
         <input type="text" id="ownername" name="ownername" placeholder="Name" required>
       </div>
       <div class="grid-item">

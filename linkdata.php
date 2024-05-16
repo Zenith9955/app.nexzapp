@@ -215,7 +215,7 @@ table {
  }
 
  table tr:hover {
-     background-color: #e6e6e6; /* Darker shade on hover for better feedback */
+     background-color: #f6f6f6; /* Darker shade on hover for better feedback */
  }
 
  /* Styling for form elements */
@@ -337,7 +337,8 @@ table {
         <li class="dropdown">
           <a href="#">Tracker &#9662;</a>
           <div class="dropdown-content">
-          <a href="linkdata.php">New-Links</a>
+          <a href="projectdata.php">Project Tracker</a>
+          <a href="linkdata.php">Implement Tracker</a>
             <a href="tracker1.php">Tracker 1</a>
             <a href="#">Tracker 2</a>
             <a href="#">Tracker 3</a>
@@ -413,6 +414,7 @@ $totalInactive = ($resultInactive->num_rows > 0) ? $resultInactive->num_rows : 0
         <th>ageing Days</th>
         <th>acceptance Date</th>
         <th>Remarks</th>
+        <th>Actions</th>
 
 
 
@@ -448,7 +450,9 @@ $totalInactive = ($resultInactive->num_rows > 0) ? $resultInactive->num_rows : 0
               <td><?= htmlspecialchars($row['ageingdays']) ?></td>
               <td><?= htmlspecialchars($row['acceptancedate']) ?></td>
               <td><?= htmlspecialchars($row['remarks']) ?></td>
-                
+              <td>
+                <a href="?delete=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
         </tr>
     <?php endwhile; ?>
 </table>

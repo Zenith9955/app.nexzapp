@@ -1,5 +1,7 @@
 <?php
 session_start();
+require_once "masterdatabase.php";
+
 if (!isset($_SESSION['user'])) {
     header('Location: login.php');
 }
@@ -240,8 +242,6 @@ form {
   border-radius: 5px; /* Rounded corners for the form */
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1); /* Add shadow to the form */
 }
-
-
   </style>
   
   <!-------------------CSS END----------------------------------------->
@@ -294,7 +294,8 @@ form {
         <li class="dropdown">
           <a href="#">Tracker &#9662;</a>
           <div class="dropdown-content">
-          <a href="linkdata.php">New-Links</a>
+          <a href="projectdata.php">Project Tracker</a>
+          <a href="linkdata.php">Implement Tracker</a>
             <a href="tracker1.php">Tracker 1</a>
             <a href="#">Tracker 2</a>
             <a href="#">Tracker 3</a>
@@ -315,76 +316,30 @@ form {
 
   <!---========================CUSTOMER FORMS============================================-->
   
-  
-  <div class="box"> <!-- Enclosing the content in a box -->
+  <div class="box"> 
+  <form action="" method="post" enctype="multipart/form-data">
   <?php
+require_once 'masterdatabase.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
-  require_once "masterdatabase.php";
-    function sanitize_input($conn, $data) {
-        return mysqli_real_escape_string($conn, htmlspecialchars(trim($data)));
-    }
-
-    // Sanitize input data
-    $feasibilityID = sanitize_input($conn, $_POST['feasibilityID']);
-    $date = sanitize_input($conn, $_POST['date']);
-    $name = sanitize_input($conn, $_POST['name']);
-    $contactname = sanitize_input($conn, $_POST['contactname']);
-    $contactnub = sanitize_input($conn, $_POST['contactnub']);
-    $contactmail = sanitize_input($conn, $_POST['contactmail']);
-    $fibertype = sanitize_input($conn, $_POST['fibertype']);
-    $endA = sanitize_input($conn, $_POST['endA']);
-    $endAlatlong = sanitize_input($conn, $_POST['endAlatlong']);
-    $endB = sanitize_input($conn, $_POST['endB']);
-    $endBlatlong = sanitize_input($conn, $_POST['endBlatlong']);
-    $partnername = sanitize_input($conn, $_POST['partnername']);
-    $partnernumber = sanitize_input($conn, $_POST['partnernumber']);
-    $partnermail = sanitize_input($conn, $_POST['partnermail']);
-    $Status = sanitize_input($conn, $_POST['Status']);
-    $postatus = sanitize_input($conn, $_POST['postatus']);
-    $po = sanitize_input($conn, $_POST['po']);
-
-    // Other input sanitization here...
-
-    // SQL query to insert data into database using prepared statements
-    $sql = "INSERT INTO darkfiber (feasibilityID, date, name, contactname, contactnub, contactmail, fibertype, endA, endAlatlong, endB, endBlatlong, partnername, partnernumber, partnermail, Status, postatus, po) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmt = mysqli_stmt_init($conn);
-
-    if (mysqli_stmt_prepare($stmt, $sql)) {
-        mysqli_stmt_bind_param($stmt, "sssssssssssssssss", $feasibilityID, $date, $name, $contactname, $contactnub, $contactmail, $fibertype, $endA, $endAlatlong, $endB, $endBlatlong, $partnername, $partnernumber, $partnermail, $Status, $postatus, $po);
-        mysqli_stmt_execute($stmt);
-        
-        // Check if the insertion was successful
-        if (mysqli_stmt_affected_rows($stmt) > 0) {
-            echo "<div class='alert alert-success'>Upload successful</div>";
-        } else {
-            echo "<div class='alert alert-danger'>Insertion failed</div>";
-        }
-    } else {
-        echo "<div class='alert alert-danger'>Something went wrong: " . mysqli_error($conn) . "</div>";
-    }
-}
-?>
- <!---------------------------DATABASE PHP END------------------------------>
-  <?php
-require_once "masterdatabase.php";
-
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get the current month
+// Get the current month and year
 $currentMonth = date('m');
+$currentYear = date('Y');
 
-// SQL query to get the maximum serial number for the current month
-$sql = "SELECT MAX(SUBSTRING(feasibilityID, 9)) AS max_serial FROM Darkfiber WHERE SUBSTRING(feasibilityID, 4, 2) = '$currentMonth'";
-$result = $conn->query($sql);
+// SQL query to get the maximum serial number for all months
+$sql = "SELECT MAX(CAST(SUBSTRING(df.feasibilityID, 12) AS UNSIGNED)) AS max_serial 
+        FROM darkfiber df";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$result = $stmt->get_result();
 $maxSerial = 0;
 
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
-    if ($row['max_serial'] != null) {
+    if ($row['max_serial'] !== null) {
         $maxSerial = intval($row['max_serial']);
     }
 }
@@ -393,27 +348,80 @@ if ($result->num_rows > 0) {
 $newSerial = $maxSerial + 1;
 
 // Pad the serial number with leading zeros if necessary
-$serialNumber = str_pad($newSerial, 4, '0', STR_PAD_LEFT);
+$serialNumber = str_pad($newSerial, 3, '0', STR_PAD_LEFT);
 
-// Construct the feasibility ID
-$feasibilityID = "OR/$currentMonth/$serialNumber";
+// Construct the feasibility ID with the current month and year
+$feasibilityID = "OR/{$currentMonth}/{$currentYear}/{$serialNumber}";
 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+    require_once "masterdatabase.php";
+
+    function sanitize_input($conn, $data) {
+        return mysqli_real_escape_string($conn, htmlspecialchars(trim($data)));
+    }
+
+    $name = isset($_POST['name']) ? sanitize_input($conn, $_POST['name']) : '';
+    $feasibilityID = isset($_POST['feasibilityID']) ? sanitize_input($conn, $_POST['feasibilityID']) : '';
+    $date = isset($_POST['date']) ? sanitize_input($conn, $_POST['date']) : '';
+    $contactname = isset($_POST['contactname']) ? sanitize_input($conn, $_POST['contactname']) : '';
+    $contactnub = isset($_POST['contactnub']) ? sanitize_input($conn, $_POST['contactnub']) : '';
+    $contactmail = isset($_POST['contactmail']) ? sanitize_input($conn, $_POST['contactmail']) : '';
+    $fibertype = isset($_POST['fibertype']) ? sanitize_input($conn, $_POST['fibertype']) : '';
+    $endA = isset($_POST['endA']) ? sanitize_input($conn, $_POST['endA']) : '';
+    $endAlatlong = isset($_POST['endAlatlong']) ? sanitize_input($conn, $_POST['endAlatlong']) : '';
+    $endB = isset($_POST['endB']) ? sanitize_input($conn, $_POST['endB']) : '';
+    $endBlatlong = isset($_POST['endBlatlong']) ? sanitize_input($conn, $_POST['endBlatlong']) : '';
+    $postatus = isset($_POST['postatus']) ? sanitize_input($conn, $_POST['postatus']) : '';
+    $po = isset($_POST['po']) ? sanitize_input($conn, $_POST['po']) : '';
+    $partner = isset($_POST['partner']) ? sanitize_input($conn, $_POST['partner']) : '';
+    $partnername1 = isset($_POST['partnername1']) ? sanitize_input($conn, $_POST['partnername1']) : '';
+    $partnernumber1 = isset($_POST['partnernumber1']) ? sanitize_input($conn, $_POST['partnernumber1']) : '';
+    $partnermail1 = isset($_POST['partnermail1']) ? sanitize_input($conn, $_POST['partnermail1']) : '';
+    $Status = isset($_POST['Status']) ? sanitize_input($conn, $_POST['Status']) : '';
+    $distance = isset($_POST['distance']) ? sanitize_input($conn, $_POST['distance']) : '';
+    $partnername2 = isset($_POST['partnername2']) ? sanitize_input($conn, $_POST['partnername2']) : '';
+    $partnernumber2 = isset($_POST['partnernumber2']) ? sanitize_input($conn, $_POST['partnernumber2']) : '';
+    $partnermail2 = isset($_POST['partnermail2']) ? sanitize_input($conn, $_POST['partnermail2']) : '';
+    $Status2 = isset($_POST['Status2']) ? sanitize_input($conn, $_POST['Status2']) : '';
+    $distance2 = isset($_POST['distance2']) ? sanitize_input($conn, $_POST['distance2']) : '';
+    $partnername3 = isset($_POST['partnername3']) ? sanitize_input($conn, $_POST['partnername3']) : '';
+    $partnernumber3 = isset($_POST['partnernumber3']) ? sanitize_input($conn, $_POST['partnernumber3']) : '';
+    $partnermail3 = isset($_POST['partnermail3']) ? sanitize_input($conn, $_POST['partnermail3']) : '';
+    $Status3 = isset($_POST['Status3']) ? sanitize_input($conn, $_POST['Status3']) : '';
+    $distance3 = isset($_POST['distance3']) ? sanitize_input($conn, $_POST['distance3']) : '';
+    $partnername4 = isset($_POST['partnername4']) ? sanitize_input($conn, $_POST['partnername4']) : '';
+    $partnernumber4 = isset($_POST['partnernumber4']) ? sanitize_input($conn, $_POST['partnernumber4']) : '';
+    $partnermail4 = isset($_POST['partnermail4']) ? sanitize_input($conn, $_POST['partnermail4']) : '';
+    $Status4 = isset($_POST['Status4']) ? sanitize_input($conn, $_POST['Status4']) : '';
+    $distance4 = isset($_POST['distance4']) ? sanitize_input($conn, $_POST['distance4']) : '';
+    $partnername5 = isset($_POST['partnername5']) ? sanitize_input($conn, $_POST['partnername5']) : '';
+    $partnernumber5 = isset($_POST['partnernumber5']) ? sanitize_input($conn, $_POST['partnernumber5']) : '';
+    $partnermail5 = isset($_POST['partnermail5']) ? sanitize_input($conn, $_POST['partnermail5']) : '';
+    $Status5 = isset($_POST['Status5']) ? sanitize_input($conn, $_POST['Status5']) : '';
+    $distance5 = isset($_POST['distance5']) ? sanitize_input($conn, $_POST['distance5']) : '';
+
+    // Prepare SQL statement
+    $sql = "INSERT INTO darkfiber(feasibilityID, name, date, contactname, contactnub, contactmail, fibertype, endA, endAlatlong, endB, endBlatlong, postatus, po, partner, partnername1, partnernumber1, partnermail1, Status, distance, partnername2, partnernumber2, partnermail2, Status2, distance2, partnername3, partnernumber3, partnermail3, Status3, distance3, partnername4, partnernumber4, partnermail4, Status4, distance4, partnername5, partnernumber5, partnermail5, Status5, distance5) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = mysqli_stmt_init($conn);
+    if (mysqli_stmt_prepare($stmt, $sql)) {
+        // Bind parameters and execute statement
+        mysqli_stmt_bind_param($stmt, "sssssssssssssssssssssssssssssssssssssss",
+            $feasibilityID, $name, $date, $contactname, $contactnub, $contactmail, $fibertype, $endA, $endAlatlong, $endB, $endBlatlong, $postatus, $po, $partner, $partnername1, $partnernumber1, $partnermail1, $Status, $distance, $partnername2, $partnernumber2, $partnermail2, $Status2, $distance2, $partnername3, $partnernumber3, $partnermail3, $Status3, $distance3, $partnername4, $partnernumber4, $partnermail4, $Status4, $distance4, $partnername5, $partnernumber5, $partnermail5, $Status5, $distance5);
+        mysqli_stmt_execute($stmt);
+        echo "<div class='alert alert-success'>Upload successful</div>";
+    } else {
+        echo "<div class='alert alert-danger'>Something went wrong: " . mysqli_error($conn) . "</div>";
+    }
+}
 ?>
-    <form action="" method="post" enctype="multipart/form-data">
+
+
+    
       <h1>Darkfiber Form</h1>
-
       <div class="grid-container">
-            <div class="grid-item">
-                <label for="feasibilityID">Feasibility ID</label>
-                <input type="text" id="feasibilityID" name="feasibilityID" value="<?php echo $feasibilityID; ?>" readonly>
-            </div>
-
-            <div class="grid-item">
-                <label for="date">Date</label>
-                <input type="date" id="date" name="date" required>
-            </div>
-       
-            <div class="grid-item">
+      <div class="grid-item">
                 <label for="name">Customer Name</label>
                 <select id="name" name="name" required>
                     <option value="" selected disabled>Select Customer Name</option>
@@ -441,6 +449,26 @@ $feasibilityID = "OR/$currentMonth/$serialNumber";
                     ?>
                 </select>
             </div>
+
+     
+            <div class="grid-item">
+                <label for="feasibilityID">Feasibility ID</label>
+                <input type="text" id="feasibilityID" name="feasibilityID" value="<?php echo $feasibilityID; ?>" readonly>
+            </div>
+
+            <div class="grid-item">
+    <label for="date">Date</label>
+    <input type="date" id="date" name="date" required>
+</div>
+
+<script>
+    // Get today's date
+    var today = new Date().toISOString().split('T')[0];
+    
+    // Set the input value to today's date
+    document.getElementById("date").value = today;
+</script>
+
         <div class="grid-item">
           <label for="contactname">Contact Name</label>
           <input type="text" id="contactname" name="contactname" required>
@@ -467,7 +495,7 @@ $feasibilityID = "OR/$currentMonth/$serialNumber";
             </div>
         <div class="grid-item">
           <label for="endAlatlong">End A Latlong</label>
-         <input type="text" id="endAlatlong" name="endAlatlong" required>
+         <input type="text" id="endAlatlong" name="endAlatlong">
         </div>
         <div class="grid-item">
                 <label for="endB">End B</label>
@@ -475,33 +503,12 @@ $feasibilityID = "OR/$currentMonth/$serialNumber";
             </div>
         <div class="grid-item">
           <label for="endBlatlong">End B Latlong</label>
-          <input type="text" id="endBlatlong" name="endBlatlong" required>
+          <input type="text" id="endBlatlong" name="endBlatlong">
         </div>
-       
-        <div class="grid-item">
-          <label for="partnername">Partner Name</label>
-          <input type="text" id="partnername" name="partnername" required>
-        </div>
-        <div class="grid-item">
-          <label for="partnernumber">Partner Number</label>
-          <input type="text" id="partnernumber" name="partnernumber" required>
-        </div>
-        <div class="grid-item">
-          <label for="partnermail">Partner Mail</label>
-          <input type="text" id="partnermail" name="partnermail" required>
-        </div>
-        <div class="grid-item">
-           <label for="Status">Feasibility Status</label>
-           <select id="Status" name="Status" onchange="toggleForm()">
-            <option value="none" selected disabled hidden>Choose Status</option>
-           <option value="yes">Yes</option>
-           <option value="no">No</option>
-            </select>
-        </div>   
         <div class="grid-item">
     <label for="postatus">Po Status</label>
-    <select id="postatus" name="postatus" onchange="toggleForm()">
-        <option value="none" selected disabled hidden>Choose Status</option>
+    <select id="postatus" name="postatus" onchange="toggleFormPo()">
+        <option value="" selected disabled hidden>Choose Status</option>
         <option value="yes">Yes</option>
         <option value="no">No</option>
     </select>
@@ -510,24 +517,367 @@ $feasibilityID = "OR/$currentMonth/$serialNumber";
     <label for="po">Po Number</label>
     <input type="text" id="po" name="po">
 </div>
+</div>
 
+<div class="Partner-form">
+      <a href="#" onclick="togglePartnerForm()"> <h3> Partners Details  &#9662;</h3></a>
+      <div id="partnerForm" style="display: none;">
+      <div class="grid-container">
+      <div class="grid-item">
+    <label for="partner">No. of Partner</label>
+    <select id="partner" name="partner" required>
+        <option value="" selected disabled>Select Partner Name</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+</div>
+    <div class="grid-item">
+  <label for="partnername1">Partner Name</label>
+                <select id="partnername1" name="partnername1" >
+                    <option value="" selected disabled>Select Partner Name</option>
+                    <?php
+                    // Establish a database connection (you'll need your actual database credentials here)
+                    require_once "masterdatabase.php";
+                    // Check connection
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
+
+                    // SQL query to get customer names
+                    $sql = "SELECT name FROM vendor";
+                    $result = $conn->query($sql);
+
+                    // Loop through results and create options for the dropdown
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row["name"] . '">' . $row["name"] . '</option>';
+                        }
+                    }
+
+                    // Close customer name query
+                    $result->close();
+                    ?>
+                </select>
+                  </div>
+  <div class="grid-item">
+    <label for="partnernumber1">Partner Number</label>
+    <input type="text" id="partnernumber1" name="partnernumber1">
+  </div>
+  <div class="grid-item">
+    <label for="partnermail1">Partner Mail</label>
+    <input type="text" id="partnermail1" name="partnermail1">
+  </div>
+  <div class="grid-item">
+    <label for="Status">Feasibility Status</label>
+    <select id="Status" name="Status" required onchange="toggleForm()">
+        <option value="none" selected disabled hidden>Choose Status</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+    </select>
+</div>
+<div class="grid-item" id="distancediv" style="display: none;">
+    <label for="distance">Distance</label>
+    <input type="text" id="distance" name="distance">
+</div>
 <script>
     function toggleForm() {
+        var Status = document.getElementById("Status").value;
+        var distancediv = document.getElementById("distancediv");
+        if (Status === "yes") {
+            distancediv.style.display = "block";
+        } else {
+            distancediv.style.display = "none";
+        }
+    }
+</script>
+    </div>
+<br>
+<div class="grid-container">
+<div class="grid-item">
+  <label for="partnername2">Partner Name</label>
+                <select id="partnername2" name="partnername2" >
+                    <option value="" selected disabled>Select Partner Name</option>
+                    <?php
+                    // Establish a database connection (you'll need your actual database credentials here)
+                    require_once "masterdatabase.php";
+                    // Check connection
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
+
+                    // SQL query to get customer names
+                    $sql = "SELECT name FROM vendor";
+                    $result = $conn->query($sql);
+
+                    // Loop through results and create options for the dropdown
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row["name"] . '">' . $row["name"] . '</option>';
+                        }
+                    }
+
+                    // Close customer name query
+                    $result->close();
+                    ?>
+                </select>
+                  </div>
+  <div class="grid-item">
+    <label for="partnernumber2">Partner Number</label>
+    <input type="text" id="partnernumber2" name="partnernumber2">
+  </div>
+  <div class="grid-item">
+    <label for="partnermail2">Partner Mail</label>
+    <input type="text" id="partnermail2" name="partnermail2">
+  </div>
+  <div class="grid-item">
+    <label for="Status2">Feasibility Status</label>
+    <select id="Status2" name="Status2" required onchange="toggleForm2()">
+        <option value="none" selected disabled hidden>Choose Status</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+    </select>
+</div>
+<div class="grid-item" id="distancediv2" style="display: none;">
+    <label for="distance2">Distance</label>
+    <input type="text" id="distance2" name="distance2">
+</div>
+<script>
+    function toggleForm2() {
+        var Status2 = document.getElementById("Status2").value;
+        var distancediv2 = document.getElementById("distancediv2");
+        if (Status2 === "yes") {
+            distancediv2.style.display = "block";
+        } else {
+            distancediv2.style.display = "none";
+        }
+    }
+</script>
+    </div>
+<br>
+<div class="grid-container">
+<div class="grid-item">
+  <label for="partnername3">Partner Name</label>
+                <select id="partnername3" name="partnername3" >
+                    <option value="" selected disabled>Select Partner Name</option>
+                    <?php
+                    // Establish a database connection (you'll need your actual database credentials here)
+                    require_once "masterdatabase.php";
+                    // Check connection
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
+
+                    // SQL query to get customer names
+                    $sql = "SELECT name FROM vendor";
+                    $result = $conn->query($sql);
+
+                    // Loop through results and create options for the dropdown
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row["name"] . '">' . $row["name"] . '</option>';
+                        }
+                    }
+
+                    // Close customer name query
+                    $result->close();
+                    ?>
+                </select>
+                  </div>
+  <div class="grid-item">
+    <label for="partnernumber3">Partner Number</label>
+    <input type="text" id="partnernumber3" name="partnernumber3">
+  </div>
+  <div class="grid-item">
+    <label for="partnermail3">Partner Mail</label>
+    <input type="text" id="partnermail3" name="partnermail3">
+  </div>
+  <div class="grid-item">
+    <label for="Status3">Feasibility Status</label>
+    <select id="Status3" name="Status3" required onchange="toggleForm3()">
+        <option value="none" selected disabled hidden>Choose Status</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+    </select>
+</div>
+<div class="grid-item" id="distancediv3" style="display: none;">
+    <label for="distance3">Distance</label>
+    <input type="text" id="distance3" name="distance3">
+</div>
+<script>
+    function toggleForm3() {
+        var Status3 = document.getElementById("Status3").value;
+        var distancediv3 = document.getElementById("distancediv3");
+        if (Status3 === "yes") {
+            distancediv3.style.display = "block";
+        } else {
+            distancediv3.style.display = "none";
+        }
+    }
+</script>
+    </div>
+<br>
+<div class="grid-container">
+<div class="grid-item">
+  <label for="partnername4">Partner Name</label>
+                <select id="partnername4" name="partnername4" >
+                    <option value="" selected disabled>Select Partner Name</option>
+                    <?php
+                    // Establish a database connection (you'll need your actual database credentials here)
+                    require_once "masterdatabase.php";
+                    // Check connection
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
+
+                    // SQL query to get customer names
+                    $sql = "SELECT name FROM vendor";
+                    $result = $conn->query($sql);
+
+                    // Loop through results and create options for the dropdown
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row["name"] . '">' . $row["name"] . '</option>';
+                        }
+                    }
+
+                    // Close customer name query
+                    $result->close();
+                    ?>
+                </select>
+                  </div>
+  <div class="grid-item">
+    <label for="partnernumber4">Partner Number</label>
+    <input type="text" id="partnernumber4" name="partnernumber4">
+  </div>
+  <div class="grid-item">
+    <label for="partnermail4">Partner Mail</label>
+    <input type="text" id="partnermail4" name="partnermail4">
+  </div>
+  <div class="grid-item">
+    <label for="Status4">Feasibility Status</label>
+    <select id="Status4" name="Status4" required onchange="toggleForm4()">
+        <option value="none" selected disabled hidden>Choose Status</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+    </select>
+</div>
+<div class="grid-item" id="distancediv4" style="display: none;">
+    <label for="distance4">Distance</label>
+    <input type="text" id="distance4" name="distance4">
+</div>
+<script>
+    function toggleForm4() {
+        var Status4 = document.getElementById("Status4").value;
+        var distancediv4 = document.getElementById("distancediv4");
+        if (Status4 === "yes") {
+            distancediv4.style.display = "block";
+        } else {
+            distancediv4.style.display = "none";
+        }
+    }
+</script>
+    </div>
+<br>
+<div class="grid-container">
+  <div class="grid-item">
+  <label for="partnername5">Partner Name</label>
+                <select id="partnername5" name="partnername5" >
+                    <option value="" selected disabled>Select Partner Name</option>
+                    <?php
+                    // Establish a database connection (you'll need your actual database credentials here)
+                    require_once "masterdatabase.php";
+                    // Check connection
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
+
+                    // SQL query to get customer names
+                    $sql = "SELECT name FROM vendor";
+                    $result = $conn->query($sql);
+
+                    // Loop through results and create options for the dropdown
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row["name"] . '">' . $row["name"] . '</option>';
+                        }
+                    }
+
+                    // Close customer name query
+                    $result->close();
+                    ?>
+                </select>
+                  </div>
+  <div class="grid-item">
+    <label for="partnernumber5">Partner Number</label>
+    <input type="text" id="partnernumber5" name="partnernumber5">
+  </div>
+  <div class="grid-item">
+    <label for="partnermail5">Partner Mail</label>
+    <input type="text" id="partnermail5" name="partnermail5">
+  </div>
+  <div class="grid-item">
+    <label for="Status5">Feasibility Status</label>
+    <select id="Status5" name="Status5" required onchange="toggleForm5()">
+        <option value="none" selected disabled hidden>Choose Status</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+    </select>
+</div>
+<div class="grid-item" id="distancediv5" style="display: none;">
+    <label for="distance5">Distance</label>
+    <input type="text" id="distance5" name="distance5">
+</div>
+<script>
+    function toggleForm5() {
+        var Status5 = document.getElementById("Status5").value;
+        var distancediv5 = document.getElementById("distancediv5");
+        if (Status5 === "yes") {
+            distancediv5.style.display = "block";
+        } else {
+            distancediv5.style.display = "none";
+        }
+    }
+</script>
+    </div>
+</div>
+<script>
+    function toggleFormPo() {
         var postatus = document.getElementById("postatus").value;
         var ponumberdiv = document.getElementById("ponumberdiv");
-
         if (postatus === "yes") {
             ponumberdiv.style.display = "block";
         } else {
             ponumberdiv.style.display = "none";
         }
-      }    
+    }
 </script>
+  
+<script>
+    function togglePartnerForm() {
+        var partnerForm = document.getElementById("partnerForm");
+        if (partnerForm.style.display === "none" || partnerForm.style.display === "") {
+            partnerForm.style.display = "block";
+        } else {
+            partnerForm.style.display = "none";
+        }
+    }
+</script>
+
       <div class="button-container">
         <button type="submit" name="submit">Submit</button>
+      </div>
+      <div class = "database">
+      <a href="darkfiberdata.php">Darkfiber   Database</a>
       </div>
     </form>
   </div>
   
 </body>
 </html>
+<?php
+// Close the database connection
+$conn->close();
+?>

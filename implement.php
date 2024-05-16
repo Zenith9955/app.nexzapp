@@ -294,7 +294,8 @@ form {
         <li class="dropdown">
           <a href="#">Tracker &#9662;</a>
           <div class="dropdown-content">
-          <a href="linkdata.php">New-Links</a>
+          <a href="projectdata.php">Project Tracker</a>
+          <a href="linkdata.php">Implement Tracker</a>
             <a href="tracker1.php">Tracker 1</a>
             <a href="#">Tracker 2</a>
             <a href="#">Tracker 3</a>
@@ -363,7 +364,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $endAlatlong = sanitize_input($conn, $_POST['endAlatlong']);
     $endB = sanitize_input($conn, $_POST['endB']);
     $endBlatlong = sanitize_input($conn, $_POST['endBlatlong']);
-    $vendorname = sanitize_input($conn, $_POST['vendorname']);
     $partnername = sanitize_input($conn, $_POST['partnername']);
     $partnernumber = sanitize_input($conn, $_POST['partnernumber']);
     $partnermail = sanitize_input($conn, $_POST['partnermail']); 
@@ -373,7 +373,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $handoverby = sanitize_input($conn, $_POST['handoverby']);
     $handover = sanitize_input($conn, $_POST['handover']);
     $recurring = sanitize_input($conn, $_POST['recurring']);
-    $deliverystatus = sanitize_input($conn, $_POST['deliverystatus']);
+    $monthly = sanitize_input($conn, $_POST['monthly']);
     $projectend = sanitize_input($conn, $_POST['projectend']);
     $ageingdays = sanitize_input($conn, $_POST['ageingdays']);
     $acceptancedate = sanitize_input($conn, $_POST['acceptancedate']);
@@ -383,32 +383,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $otdrdlsPath = isset($_FILES['otdrdls']) ? uploadFile($_FILES['otdrdls']) : '';
 
     // SQL DATABASE
-    $sql = "INSERT INTO implement (name, status, disconnection, feasibilityID, po, podate, expire, podis, contactname, contactnub, contactmail, fibertype, endA, endAlatlong, endB, endBlatlong, vendorname, partnername, partnernumber, partnermail, otdr, overall, handoverto, handoverby, handover, recurring, deliverystatus, projectend, ageingdays, acceptancedate, remarks, otdrdls)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO implement (name, status, disconnection, feasibilityID, po, podate, expire, podis, contactname, contactnub, contactmail, fibertype, endA, endAlatlong, endB, endBlatlong, partnername, partnernumber, partnermail, otdr, overall, handoverto, handoverby, handover, recurring, monthly, projectend, ageingdays, acceptancedate, remarks, otdrdls)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_stmt_init($conn);
    
     if (mysqli_stmt_prepare($stmt, $sql)) {
-        mysqli_stmt_bind_param($stmt, "ssssssssssssssssssssssssssssssss",
-            $name, $status, $disconnection, $feasibilityID, $po, $podate, $expire, $podis, $contactname, $contactnub, $contactmail, $fibertype, $endA, $endAlatlong, $endB, $endBlatlong, $vendorname, $partnername, $partnernumber, $partnermail, $otdr, $overall, $handoverto, $handoverby, $handover, $recurring, $deliverystatus, $projectend, $ageingdays, $acceptancedate, $remarks, $otdrdlsPath);
+        mysqli_stmt_bind_param($stmt, "sssssssssssssssssssssssssssssss",
+            $name, $status, $disconnection, $feasibilityID, $po, $podate, $expire, $podis, $contactname, $contactnub, $contactmail, $fibertype, $endA, $endAlatlong, $endB, $endBlatlong, $partnername, $partnernumber, $partnermail, $otdr, $overall, $handoverto, $handoverby, $handover, $recurring, $monthly, $projectend, $ageingdays, $acceptancedate, $remarks, $otdrdlsPath);
         
         mysqli_stmt_execute($stmt);
         echo "<div class='alert alert-success'>Upload successful</div>";
     } else {
         echo "<div class='alert alert-danger'>Something went wrong: " . mysqli_error($conn) . "</div>";
     }
+    
   
 }
 ?>
+
   <!---------------------===========DATABASE PHP END===================--------------->
 
       <h1>Implementation Form</h1>
 
       
       <div class="grid-container">
+     
       <div class="grid-item">
-    <label for="feasibilityID">Feasibility ID:</label>
-    <select id="feasibilityID" name="feasibilityID" required onchange="fetchCustomerName()">
-        <option value="" selected disabled>Select Feasibility ID</option>
+    <label for="name">Customer Name:</label>
+    <select id="name" name="name" required>
+        <option value="" selected disabled>Select Customer Name</option>
         <?php
         // Establish a database connection (you'll need your actual database credentials here)
         require_once "masterdatabase.php";
@@ -417,40 +420,74 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             die("Connection failed: " . $conn->connect_error);
         }
 
-        // SQL query to get feasibility IDs
-        $sql = "SELECT feasibilityID FROM darkfiber";
+        // SQL query to get distinct customer names with PO status as 'yes'
+        $sql = "SELECT DISTINCT name FROM projects WHERE deliverystatus = 'complete'";
         $result = $conn->query($sql);
 
         // Loop through results and create options for the dropdown
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                echo '<option value="' . $row["feasibilityID"] . '">' . $row["feasibilityID"] . '</option>';
+                echo '<option value="' . $row["name"] . '">' . $row["name"] . '</option>';
             }
         }
 
-        // Close feasibility ID query
+        // Close query
         $result->close();
         ?>
     </select>
 </div>
 
 <div class="grid-item">
-    <label for="name">Customer Name:</label>
-    <input type="text" id="name" name="name" required readonly>
+    <label for="feasibilityID">Feasibility ID:</label>
+    <select id="feasibilityID" name="feasibilityID" required>
+        <option value="" selected disabled>Select Feasibility ID</option>
+    </select>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    function fetchCustomerName() {
-        var feasibilityID = document.getElementById("feasibilityID").value;
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("name").value = this.responseText;
+    $(document).ready(function() {
+        // Bind change event to the name input field to clear the Feasibility ID dropdown when the name changes
+        $('#name').on('change', function() {
+            $('#feasibilityID').empty();
+            $('#feasibilityID').append($('<option>', {
+                value: "",
+                text: "Select Feasibility ID",
+                disabled: true,
+                selected: true
+            }));
+        });
+
+        // Bind focus event to the Feasibility ID dropdown to populate options
+        $('#feasibilityID').focus(function() {
+            var name = $('#name').val();
+            if (name) { // Ensure name field is not empty
+                $.ajax({
+                    url: 'fetch_ids_name.php', // Path to your PHP file for fetching feasibility IDs
+                    method: 'POST',
+                    data: { name: name },
+                    dataType: 'json',
+                    success: function(response) {
+                        $('#feasibilityID').empty();
+                        $('#feasibilityID').append($('<option>', {
+                            value: "",
+                            text: "Select Feasibility ID",
+                            disabled: true,
+                            selected: true
+                        }));
+                        $.each(response, function(key, value) {
+                            $('#feasibilityID').append($('<option>', {
+                                value: value,
+                                text: value
+                            }));
+                        });
+                    }
+                });
+            } else {
+                alert('Please enter a name first.');
             }
-        };
-        xhr.open("GET", "fetch_customer_name.php?feasibilityID=" + feasibilityID, true);
-        xhr.send();
-    }
+        });
+    });
 </script>
         <div class="grid-item">
                 <label for="po">Po Number</label>
@@ -494,7 +531,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             </div>
         <div class="grid-item">
           <label for="endAlatlong">End A Latlong:</label>
-         <input type="text" id="endAlatlong" name="endAlatlong" required>
+         <input type="text" id="endAlatlong" name="endAlatlong">
         </div>
         <div class="grid-item">
                 <label for="endB">End B:</label>
@@ -502,42 +539,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             </div>
         <div class="grid-item">
           <label for="endBlatlong">End B Latlong:</label>
-          <input type="text" id="endBlatlong" name="endBlatlong" required>
-        </div>
-       
-            <div class="grid-item">
-                <label for="vendorname">Partner:</label>
-                <select id="vendorname" name="vendorname" required>
-                    <option value="" selected disabled>Select Vendor Name</option>
-                    <?php
-                    // Establish a database connection (you'll need your actual database credentials here)
-                    require_once "masterdatabase.php";
-                    // Check connection
-                    if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
-                    }
-
-                    // SQL query to get customer names
-                    $sql = "SELECT name FROM vendor";
-                    $result = $conn->query($sql);
-
-                    // Loop through results and create options for the dropdown
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo '<option value="' . $row["name"] . '">' . $row["name"] . '</option>';
-                        }
-                    }
-
-                    // Close customer name query
-                    $result->close();
-                    ?>
-                </select>
-            </div>
-        <div class="grid-item">
-          <label for="partnername">Partner Name:</label>
-          <input type="text" id="partnername" name="partnername" required>
+          <input type="text" id="endBlatlong" name="endBlatlong">
         </div>
         <div class="grid-item">
+  <label for="partnername">Partner Name:</label>
+  <select id="partnername" name="partnername" required>
+    <option value="" selected disabled>Select Partner Name</option>
+  </select>
+</div>
+
+<!-- Rest of your form elements -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  $('#feasibilityID').change(function() {
+    var feasibilityID = $(this).val();
+    
+    // Fetch partner names
+    $.ajax({
+      url: 'fetch_partner_names.php', // Correct PHP script filename
+      method: 'POST',
+      data: {feasibilityID: feasibilityID },
+      dataType: 'json',
+      success: function(response) {
+        $('#partnername').empty().append('<option value="" selected disabled>Select Partner Name</option>');
+        $.each(response, function(key, value) {
+          $('#partnername').append($('<option>', {
+            value: value,
+            text: value
+          }));
+        });
+      },
+      error: function(xhr, status, error) {
+        console.error("AJAX Error: " + status + ", " + error);
+      }
+    });
+  });
+});
+</script>
+      
+
+         <div class="grid-item">
           <label for="partnernumber">Partner Number:</label>
           <input type="text" id="partnernumber" name="partnernumber" required>
         </div>
@@ -573,16 +616,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                 <label for="recurring">Recurring Charges:</label>
                 <input type="text" id="recurring" name="recurring" required>
             </div>
-        <div class="grid-item">
-  <label for="deliverystatus">Delivery Status</label>
-  <select id="deliverystatus" name="deliverystatus" onchange="toggleForm()">
-    <option value="none" selected disabled hidden>Choose delivery status</option>
-    <option value="wip">WIP</option>
-    <option value="acceptancepending">Acceptance Pending</option>
-    <option value="billingpending">Billing Pending</option>
-    <option value="complete">Complete</option>
-  </select>
-</div>
+            <div class="grid-item">
+                <label for="monthly">Monthly charges:</label>
+                <input type="text" id="monthly" name="monthly" required>
+            </div>
 <div class="grid-item" id="projectEndDateDiv" style="display: none;">
   <label for="projectend">Project End Date:</label>
   <input type="Date" id="projectend" name="projectend">
@@ -611,7 +648,7 @@ function toggleForm() {
     projectEndDateDiv.style.display = "none";
     ageingDaysDiv.style.display = "none";
     acceptanceDateDiv.style.display = "block";
-  } else {
+  } else { 
     projectEndDateDiv.style.display = "none";
     ageingDaysDiv.style.display = "none";
     acceptanceDateDiv.style.display = "block";
@@ -620,18 +657,31 @@ function toggleForm() {
 </script>
 
 <div class="grid-item">
-                <label for="status">Status</label>
-                <select id="status" name="status" required>
-                    <option value="none" selected disabled hidden>Choose Status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
-            </div>
-            <div class="grid-item">
-                <label for="disconnection">Disconnection Date</label>
-                <input type="date" id="disconnection" name="disconnection">
-            </div>
+    <label for="status">Status</label>
+    <select id="status" name="status" required onchange="toggleForm()">
+        <option value="none" selected disabled hidden>Choose Status</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+    </select>
+</div>
 
+<div class="grid-item" id="disconnectionContainer" style="display: none;">
+    <label for="disconnection">Disconnection Date</label>
+    <input type="date" id="disconnection" name="disconnection">
+</div>
+
+<script>
+    function toggleForm() {
+        var status = document.getElementById("status").value;
+        var disconnectionContainer = document.getElementById("disconnectionContainer");
+
+        if (status === "inactive") {
+            disconnectionContainer.style.display = "block";
+        } else {
+            disconnectionContainer.style.display = "none";
+        }
+    }
+</script>
             <div class="grid-item">
                 <label for="remarks">Remarks:</label>
                 <input type="text" id="remarks" name="remarks" required>
@@ -639,9 +689,55 @@ function toggleForm() {
         <div class="button-container">
         <button type="submit" name="submit">Submit</button>
       </div>
+      <div class = "database">
+      <a href="linkdata.php">Darkfiber Database</a>
+      </div>
     </form>
   </div>
-  
+  <script>
+  $(document).ready(function() {
+    $('#feasibilityID').change(function() {
+        var feasibilityID = $(this).val();
+        console.log("Selected feasibilityID: " + feasibilityID); // Log the selected name
+        $.ajax({
+            url: 'fetch_customer_data.php', // Path to your PHP file for fetching customer data
+            method: 'POST',
+            data: {feasibilityID: feasibilityID },
+            dataType: 'json',
+            success: function(response) {
+                console.log("Response from server:", response); // Log the response received from the server
+                
+                // Populate form fields based on the response
+                $('#po').val(response.po);
+                $('#podate').val(response.podate);
+                $('#expire').val(response.expire);
+                $('#podis').val(response.podis);
+                $('#fibertype').val(response.fibertype);
+                $('#endA').val(response.endA);
+                $('#endAlatlong').val(response.endAlatlong);
+                $('#endB').val(response.endB);
+                $('#endBlatlong').val(response.endBlatlong);
+                $('#otdr').val(response.otdr);
+                $('#overall').val(response.overall);
+                $('#handoverto').val(response.handoverto);
+                $('#handoverby').val(response.handoverby);
+                $('#handover').val(response.handover);
+                $('#recurring').val(response.recurring);
+                $('#monthly').val(response.monthly);
+                $('#remarks').val(response.remarks);
+                
+                // Additional fields can be populated in a similar manner
+                
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});
+
+</script>
+
 
 </body>
 </html>

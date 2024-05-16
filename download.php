@@ -1,4 +1,10 @@
 <?php
+session_start();
+if (!isset($_SESSION['user'])) {
+    header('Location: login.php');
+}
+?>
+<?php
 // Database connection
 require_once "masterdatabase.php";
 
@@ -43,7 +49,23 @@ if(isset($_GET['file'])) {
         <meta charset="UTF-8">
         <title>File Download</title>
         <style>
-          header {
+          body {
+  background-color: #fff1;
+  background-size: cover;
+  background-position: center;
+  margin: 0;
+  font-family: Arial, sans-serif; 
+}
+h1,h2,h3,h4,h5,h6{
+color: #4b4b4b;
+}
+h1{
+font-size: 35px;
+margin: 40px;
+padding: 10px;
+
+}
+header {
 background-color: #ffffff;
 color: #333; /* Dark gray */
 padding: 10px;
@@ -157,7 +179,6 @@ a.signout-link:hover {
 background-color: #e0e0e0; /* Light gray background on hover */
 color: #000; /* Darken text color on hover */
 }
-
 /* Add a class for when the header is scrolled */
 header.scrolled {
 top: -90px; /* Negative header height to hide */
@@ -169,6 +190,7 @@ form {
   display: flex;
   justify-content: ;
   margin-top: 100px;
+  padding: 10px;
 }
       
 
@@ -179,7 +201,7 @@ h2{
       }
 
 table {
-    width: 100%;
+    width: 90%;
     margin : 10px auto;
     border-collapse: collapse;
     overflow: hidden; /* Ensuring borders are consistent */
@@ -195,7 +217,7 @@ table th, table td {
 }
 
 table th {
-    background-color: #4b4b4b;
+    background-color: #fff;
 }
 
 table tr:nth-child(even) {
@@ -203,7 +225,7 @@ table tr:nth-child(even) {
 }
 
 table tr:hover {
-    background-color: #ababab; /* Darker shade on hover for better feedback */
+    background-color: #f6f6f6; /* Darker shade on hover for better feedback */
 }
 
 /* Styling for form elements */
@@ -237,6 +259,7 @@ a:hover {
 }
 
 </style>
+    
     
 <!-----------------------=+===========CSS END=======================---------->
 
@@ -285,7 +308,8 @@ a:hover {
         <li class="dropdown">
           <a href="#">Tracker &#9662;</a>
           <div class="dropdown-content">
-          <a href="linkdata.php">New-Links</a>
+          <a href="projectdata.php">Project Tracker</a>
+          <a href="linkdata.php">Implement Tracker</a>
             <a href="tracker1.php">Tracker 1</a>
             <a href="#">Tracker 2</a>
             <a href="#">Tracker 3</a>
